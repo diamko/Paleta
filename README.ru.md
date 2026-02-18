@@ -131,7 +131,7 @@ Windows (PowerShell):
 
 ```powershell
 python -m venv .venv
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ### 3) Установка зависимостей
@@ -143,8 +143,14 @@ pip install -r requirements.txt
 
 ### 4) Инициализация базы данных (первый запуск)
 
+Linux/macOS:
 ```bash
 python3 -c "from app import app; from extensions import db; import models; app.app_context().push(); db.create_all()"
+```
+
+Windows (PowerShell):
+```bash
+python -c "from app import app; from extensions import db; import models; app.app_context().push(); db.create_all()"
 ```
 
 По умолчанию SQLite-база создается в `instance/paleta.db`.
@@ -155,10 +161,15 @@ python3 -c "from app import app; from extensions import db; import models; app.a
 
 ### Вариант A: прямой запуск
 
+Linux/macOS:
 ```bash
 python3 app.py
 ```
 
+Windows (PowerShell):
+```bash
+python app.py
+```
 ### Вариант B: Flask CLI
 
 ```bash

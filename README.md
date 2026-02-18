@@ -120,7 +120,7 @@ Windows (PowerShell):
 
 ```powershell
 python -m venv .venv
-.venv\Scripts\Activate.ps1
+.\.venv\Scripts\Activate.ps1
 ```
 
 ### 3) Install dependencies
@@ -132,8 +132,13 @@ pip install -r requirements.txt
 
 ### 4) Initialize database (first run)
 
+Linux/macOS:
 ```bash
 python3 -c "from app import app; from extensions import db; import models; app.app_context().push(); db.create_all()"
+```
+Windows (PowerShell):
+```bash
+python -c "from app import app; from extensions import db; import models; app.app_context().push(); db.create_all()"
 ```
 
 By default, SQLite DB is created at `instance/paleta.db`.
@@ -142,8 +147,14 @@ By default, SQLite DB is created at `instance/paleta.db`.
 
 ### Option A: direct run
 
+Linux/macOS:
 ```bash
 python3 app.py
+```
+Windows (PowerShell):
+
+```bash
+python app.py
 ```
 
 ### Option B: Flask CLI

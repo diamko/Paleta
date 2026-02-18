@@ -1,0 +1,98 @@
+/* ===== BUTTONS ===== */
+/* Base button styles */
+.btn {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+    border: none;
+    cursor: pointer;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.2);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease, height 0.6s ease;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+/* Primary Button */
+.btn-primary {
+    background: var(--gradient-primary);
+}
+
+.btn-primary:hover, .btn-primary:focus {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Outline Primary */
+.btn-outline-primary {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+}
+
+.btn-outline-primary:hover {
+    background: var(--gradient-primary);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Success Button (Сохранить) */
+.btn-success {
+    background: var(--gradient-success);
+}
+
+.btn-success:hover, .btn-success:focus {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Danger Button (Удалить) */
+.btn-danger {
+    background: var(--gradient-danger);
+}
+
+.btn-danger:hover, .btn-danger:focus {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-outline-danger {
+    background: transparent;
+    border: 2px solid var(--danger-color);
+    color: var(--danger-color);
+}
+
+.btn-outline-danger:hover {
+    background: var(--gradient-danger);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* Button sizes */
+.btn-sm {
+    padding: 0.25rem 1rem !important;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+

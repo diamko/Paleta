@@ -1,0 +1,17 @@
+/* ===== UPLOAD ZONE ===== */
+.upload-zone {
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.upload-zone:hover {
+    border-color: #6a11cb;
+    background: rgba(106, 17, 203, 0.05);
+}
+
+.upload-zone.dragover {
+    border-color: #6a11cb;
+    background: rgba(106, 17, 203, 0.1);
+}
+

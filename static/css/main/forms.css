@@ -1,0 +1,25 @@
+/* ===== FORM ELEMENTS ===== */
+.form-control, .form-select {
+    font-family: var(--font-main);
+    font-size: 1rem;
+    padding: 0.25rem 1.9rem 0.25rem 0.5rem;
+    border: 2px solid var(--medium-gray);
+    border-radius: 10px;
+    transition: var(--transition);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(106, 17, 203, 0.15);
+}
+
+.form-label {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    margin-bottom: 0.2rem;
+    color: var(--text-color);
+}
+

@@ -1,0 +1,21 @@
+/* ===== MODAL STYLES ===== */
+.modal-content {
+    border: none;
+    border-radius: 15px;
+    box-shadow: var(--shadow-medium);
+    font-family: var(--font-main);
+}
+
+.modal-header {
+    border-bottom: 2px solid var(--light-gray);
+    font-family: var(--font-heading);
+}
+
+.modal-title {
+    font-weight: 600;
+}
+
+.modal-footer {
+    border-top: 2px solid var(--light-gray);
+}
+

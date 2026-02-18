@@ -1,0 +1,162 @@
+/* ===== RESPONSIVE DESIGN ===== */
+
+/* Medium devices (tablets, 768px and up) */
+@media (min-width: 768px) {
+    .palette-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+/* Large devices (desktops, 992px and up) */
+@media (min-width: 992px) {
+    .palette-container {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+/* Small devices (landscape phones, 768px and down) */
+@media (max-width: 768px) {
+    header {
+        padding: 0.5rem !important;
+    }
+    
+    .header__logo span {
+        font-size: 1.8rem;
+    }
+    
+    .header_img {
+        width: 45px;
+        height: 45px;
+    }
+    
+    .nav {
+        justify-content: center;
+        margin: 0.5rem 0;
+    }
+    
+    .nav-link {
+        padding: 0.5rem !important;
+        font-size: 0.9rem;
+    }
+    
+    .btn {
+        padding: 0.4rem 1rem !important;
+        font-size: 0.9rem;
+    }
+    
+    .content {
+        padding: 1rem 0;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.6rem;
+    }
+    
+    .color-swatch {
+        width: 70px;
+        height: 70px;
+    }
+
+    .palette-edit-item {
+        width: 122px;
+        padding: 7px;
+    }
+
+    .palette-edit-preview {
+        height: 78px;
+    }
+
+    .palette-marker {
+        width: 26px;
+        height: 26px;
+    }
+
+    .active-loupe {
+        width: 100px;
+    }
+}
+
+/* Extra small devices (portrait phones, less than 576px) */
+@media (max-width: 575px) {
+    h1 {
+        font-size: 1.6rem;
+        text-align: center;
+    }
+    
+    h2 {
+        font-size: 1.3rem;
+        text-align: center;
+    }
+    
+    .header__logo {
+        justify-content: center;
+        margin-bottom: 0.5rem;
+    }
+    
+    .header__logo span {
+        font-size: 1.5rem;
+    }
+    
+    .nav {
+        flex-wrap: wrap;
+    }
+    
+    .col-md-3.text-end {
+        text-align: center !important;
+        margin-top: 0.5rem;
+    }
+    
+    .color-swatch {
+        width: 60px;
+        height: 60px;
+        margin: 0.15rem;
+        flex-grow: 1;
+    }
+    
+    .color-swatch .hex-code {
+        font-size: 9px;
+        padding: 3px 5px;
+    }
+
+    .palette-edit-item {
+        width: calc(50% - 0.5rem);
+        min-width: 120px;
+    }
+
+    .palette-edit-preview {
+        height: 74px;
+    }
+
+    .marker-hint {
+        font-size: 0.82rem;
+    }
+    
+    .btn {
+        width: 100%;
+        margin: 0.25rem 0;
+        padding: 0.6rem !important;
+    }
+    
+    .btn-group {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .upload-zone {
+        padding: 1.5rem 1rem !important;
+    }
+    
+    footer {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer__social {
+        justify-content: center;
+        margin-top: 1rem;
+    }
+}

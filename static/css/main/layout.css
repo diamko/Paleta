@@ -1,0 +1,23 @@
+/* ===== LAYOUT ===== */
+.page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.content {
+    flex: 1;
+    padding: 2rem 0;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.container {
+    max-width: 1200px;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+

@@ -1,0 +1,49 @@
+/* ===== FAQ PAGE ===== */
+.faq-page {
+    padding: 2rem 0 3rem;
+}
+
+.faq-page .accordion-item {
+    border-radius: 16px;
+    border: 1px solid rgba(0, 0, 0, 0.03);
+    box-shadow: var(--shadow-light);
+    overflow: hidden;
+}
+
+.faq-page .accordion-button {
+    background-color: #ffffff;
+    color: var(--text-color);
+    transition: var(--transition);
+}
+
+.faq-page .accordion-button:not(.collapsed) {
+    color: var(--primary-color);
+    background: rgba(106, 17, 203, 0.04);
+    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+}
+
+.faq-page .accordion-button i {
+    color: var(--primary-color);
+}
+
+.faq-page .accordion-body {
+    font-size: 0.95rem;
+    color: var(--text-light);
+}
+
+.faq-page ol,
+.faq-page ul {
+    padding-left: 1.2rem;
+}
+
+.faq-page li + li {
+    margin-top: 0.15rem;
+}
+
+@media (max-width: 575px) {
+    .faq-page {
+        padding-top: 1.5rem;
+        padding-bottom: 2rem;
+    }
+}
+

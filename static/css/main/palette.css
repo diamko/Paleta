@@ -199,13 +199,16 @@
 }
 
 .extract-image-col .image-stage {
+    display: block;
     width: 100%;
+    height: auto;
 }
 
 .extract-image-col #imagePreview {
     width: 100%;
-    max-height: 74vh;
     height: auto;
+    max-height: none;
+    object-fit: contain;
 }
 
 .extract-palette {
@@ -255,7 +258,7 @@
     }
 
     .extract-image-col #imagePreview {
-        max-height: 100vh;
+        max-height: none;
         border-radius: 0 !important;
     }
 
@@ -326,4 +329,3 @@
     gap: 10px;
     min-height: 200px;
 }
-

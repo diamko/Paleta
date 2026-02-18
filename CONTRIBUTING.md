@@ -44,12 +44,6 @@ Pull Requests are the best way to propose changes to the codebase. We actively w
 6. Open a Pull Request.
 7. Always add a `README` and/or `requirements.txt` to added code when relevant.
 
-## Contribution License
-
-Any contribution you make is understood to be under the same MIT License that covers the project.
-
-In short, by submitting code changes, you agree that your submissions are licensed under MIT.
-
 ## Reporting Bugs
 
 We use GitHub Issues to track public bugs.

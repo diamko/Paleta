@@ -264,6 +264,7 @@ Contributions are welcome.
 ## Author
 
 - Diana Konanerova
+- Yuliya Tyurina
 
 ## License
 

@@ -1,2 +1,4 @@
 static/uploads/*
 !static/uploads/.gitkeep
+.venv/
+venv/

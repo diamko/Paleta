@@ -39,6 +39,31 @@
                             >
                         </div>
                         <div class="mb-3">
+                            <label for="email" class="form-label">Email (для восстановления)</label>
+                            <input
+                                type="email"
+                                class="form-control"
+                                id="email"
+                                name="email"
+                                placeholder="you@example.com"
+                                oninput="this.setCustomValidity('')"
+                            >
+                        </div>
+                        <div class="mb-3">
+                            <label for="phone" class="form-label">Телефон (для восстановления)</label>
+                            <input
+                                type="tel"
+                                class="form-control"
+                                id="phone"
+                                name="phone"
+                                placeholder="+79991234567"
+                                oninput="this.setCustomValidity('')"
+                            >
+                            <div class="form-text">
+                                Укажите минимум один контакт: email или телефон.
+                            </div>
+                        </div>
+                        <div class="mb-3">
                             <label for="password" class="form-label">Пароль</label>
                             <input
                                 type="password"
@@ -46,13 +71,13 @@
                                 id="password"
                                 name="password"
                                 required
-                                minlength="8"
-                                maxlength="16"
-                                oninvalid="this.setCustomValidity('Пароль должен содержать от 8 до 16 символов')"
+                                minlength="10"
+                                maxlength="128"
+                                oninvalid="this.setCustomValidity('Пароль должен содержать от 10 до 128 символов')"
                                 oninput="this.setCustomValidity('')"
                             >
                             <div class="form-text">
-                                От 8 до 16 символов, минимум одна заглавная буква, одна строчная,
+                                От 10 до 128 символов, минимум одна заглавная буква, одна строчная,
                                 одна цифра и один спецсимвол.
                             </div>
                         </div>

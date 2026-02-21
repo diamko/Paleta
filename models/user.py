@@ -15,6 +15,11 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(200), nullable=False)
-    palettes = db.relationship('Palette', backref='author', lazy=True)
-    uploads = db.relationship('Upload', backref='user', lazy=True)
-
+    palettes = db.relationship("Palette", backref="author", lazy=True)
+    uploads = db.relationship("Upload", backref="user", lazy=True)
+    contact = db.relationship(
+        "UserContact",
+        back_populates="user",
+        uselist=False,
+        cascade="all, delete-orphan",
+    )

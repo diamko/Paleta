@@ -52,6 +52,16 @@ openssl rand -hex 32
 - `SESSION_COOKIE_SECURE=true`
 - `CORS_ENABLED=false`
 - `MAX_IMAGE_PIXELS=20000000`
+- `PASSWORD_RESET_CODE_TTL_MINUTES=15`
+- `PASSWORD_RESET_MAX_ATTEMPTS=5`
+
+Если хотите восстановление через email, задайте SMTP:
+
+- `SMTP_HOST=...`
+- `SMTP_PORT=587`
+- `SMTP_USER=...`
+- `SMTP_PASSWORD=...`
+- `SMTP_FROM=...`
 
 ## 4. Запуск контейнера
 

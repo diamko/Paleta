@@ -114,6 +114,7 @@ from flask import Flask, flash, jsonify, redirect, request, session, url_for
 
 from config import Config
 from extensions import db, login_manager, cors
+import models  # noqa: F401 - регистрирует модели для db.create_all()
 from routes.pages import register_routes as register_page_routes
 from routes.auth import register_routes as register_auth_routes
 from routes.api import register_routes as register_api_routes
@@ -147,6 +148,10 @@ def create_app() -> Flask:
     register_page_routes(app)
     register_auth_routes(app)
     register_api_routes(app)
+
+    with app.app_context():
+        # Создаем отсутствующие таблицы (без изменения существующих колонок)
+        db.create_all()
 
     def _ensure_csrf_token() -> str:
         token = session.get("csrf_token")

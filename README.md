@@ -185,6 +185,11 @@ Main config is in `config.py`.
 - `CORS_ENABLED` (`false` by default; enable only if API is called from another origin)
 - `CORS_ORIGINS` (comma-separated list of allowed origins when `CORS_ENABLED=true`)
 - `MAX_IMAGE_PIXELS` (max image resolution in pixels; default `20000000`)
+- `PASSWORD_RESET_CODE_TTL_MINUTES` (reset code lifetime in minutes; default `15`)
+- `PASSWORD_RESET_MAX_ATTEMPTS` (max code attempts before forcing re-request; default `5`)
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` (email delivery for password reset)
+- `SMTP_USE_TLS`, `SMTP_USE_SSL` (secure transport options for SMTP)
+- `SMS_API_URL`, `SMS_API_TOKEN`, `SMS_API_TIMEOUT`, `SMS_SENDER_NAME` (optional SMS delivery provider)
 
 Example (Linux/macOS):
 
@@ -195,6 +200,8 @@ export FLASK_ENV="development"
 export SESSION_COOKIE_SECURE="false"
 export CORS_ENABLED="false"
 export MAX_IMAGE_PIXELS="20000000"
+export PASSWORD_RESET_CODE_TTL_MINUTES="15"
+export PASSWORD_RESET_MAX_ATTEMPTS="5"
 ```
 
 ### Default app settings
@@ -227,7 +234,8 @@ You also get:
 - saving palettes to your personal library,
 - rename/delete palettes,
 - search/filter/sort in "My Palettes",
-- quick reuse of recent uploaded images.
+- quick reuse of recent uploaded images,
+- password recovery via email or phone (if contact is attached to account).
 
 ### Basic flow
 
@@ -247,7 +255,8 @@ Registration password requirements:
 - at least one lowercase letter,
 - at least one digit,
 - at least one special character,
-- must not contain spaces.
+- must not contain spaces,
+- registration requires at least one recovery contact (email or phone).
 
 ## API Endpoints
 

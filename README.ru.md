@@ -201,6 +201,11 @@ flask --app app run
 - `CORS_ENABLED` (`false` по умолчанию; включайте только если API вызывается с другого origin)
 - `CORS_ORIGINS` (список разрешённых origin через запятую, если `CORS_ENABLED=true`)
 - `MAX_IMAGE_PIXELS` (максимальное разрешение изображения в пикселях; по умолчанию `20000000`)
+- `PASSWORD_RESET_CODE_TTL_MINUTES` (время жизни кода восстановления в минутах; по умолчанию `15`)
+- `PASSWORD_RESET_MAX_ATTEMPTS` (макс. число попыток ввода кода; по умолчанию `5`)
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` (отправка кода по email)
+- `SMTP_USE_TLS`, `SMTP_USE_SSL` (режимы защиты SMTP)
+- `SMS_API_URL`, `SMS_API_TOKEN`, `SMS_API_TIMEOUT`, `SMS_SENDER_NAME` (опциональная отправка кода по SMS)
 
 Пример (Linux/macOS):
 
@@ -211,6 +216,8 @@ export FLASK_ENV="development"
 export SESSION_COOKIE_SECURE="false"
 export CORS_ENABLED="false"
 export MAX_IMAGE_PIXELS="20000000"
+export PASSWORD_RESET_CODE_TTL_MINUTES="15"
+export PASSWORD_RESET_MAX_ATTEMPTS="5"
 ```
 
 ### Параметры по умолчанию
@@ -245,7 +252,8 @@ export MAX_IMAGE_PIXELS="20000000"
 - сохранение палитр в аккаунт,
 - переименование и удаление палитр,
 - поиск, фильтрация и сортировка в разделе "Мои палитры",
-- повторное использование недавних загрузок.
+- повторное использование недавних загрузок,
+- восстановление пароля через email или телефон (если контакт привязан к аккаунту).
 
 ### Базовый сценарий
 
@@ -263,7 +271,8 @@ export MAX_IMAGE_PIXELS="20000000"
 - минимум одна строчная буква;
 - минимум одна цифра;
 - минимум один спецсимвол;
-- без пробелов.
+- без пробелов;
+- при регистрации нужно указать минимум один контакт для восстановления: email или телефон.
 
 <a id="api-ru"></a>
 

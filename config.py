@@ -94,6 +94,22 @@ class Config:
     MIN_COLOR_COUNT = _get_env_int("MIN_COLOR_COUNT", 3)
     MAX_COLOR_COUNT = _get_env_int("MAX_COLOR_COUNT", 15)
 
+    PASSWORD_RESET_CODE_TTL_MINUTES = _get_env_int("PASSWORD_RESET_CODE_TTL_MINUTES", 15)
+    PASSWORD_RESET_MAX_ATTEMPTS = _get_env_int("PASSWORD_RESET_MAX_ATTEMPTS", 5)
+
+    SMTP_HOST = os.environ.get("SMTP_HOST", "").strip()
+    SMTP_PORT = _get_env_int("SMTP_PORT", 587)
+    SMTP_USER = os.environ.get("SMTP_USER", "").strip()
+    SMTP_PASSWORD = os.environ.get("SMTP_PASSWORD", "")
+    SMTP_FROM = os.environ.get("SMTP_FROM", "").strip()
+    SMTP_USE_TLS = _get_env_bool("SMTP_USE_TLS", default=True)
+    SMTP_USE_SSL = _get_env_bool("SMTP_USE_SSL", default=False)
+
+    SMS_API_URL = os.environ.get("SMS_API_URL", "").strip()
+    SMS_API_TOKEN = os.environ.get("SMS_API_TOKEN", "").strip()
+    SMS_API_TIMEOUT = _get_env_int("SMS_API_TIMEOUT", 8)
+    SMS_SENDER_NAME = os.environ.get("SMS_SENDER_NAME", "Paleta").strip()
+
     @staticmethod
     def allowed_file(filename: str) -> bool:
         return (

@@ -232,6 +232,9 @@ def register_routes(app):
             request_lang = str(data.get("lang") or "").strip().lower()
             if request_lang not in Config.SUPPORTED_LANGUAGES:
                 request_lang = _lang_hint_from_referrer(request.referrer)
+            if request_lang not in Config.SUPPORTED_LANGUAGES:
+                session_lang = str(session.get("ui_lang") or "").strip().lower()
+                request_lang = session_lang if session_lang in Config.SUPPORTED_LANGUAGES else None
 
             if not colors:
                 return _api_error(_("Палитра должна содержать корректные HEX-цвета"), 400)
@@ -249,11 +252,10 @@ def register_routes(app):
                 )
 
             default_base_name = _default_palette_name_for_lang(request_lang)
-            default_base_variants = _default_palette_base_variants()
             default_names = _default_palette_aliases()
 
             if not palette_name or palette_name in default_names:
-                base_name = palette_name if palette_name in default_base_variants else default_base_name
+                base_name = default_base_name
 
                 existing = Palette.query.filter_by(
                     user_id=current_user.id,

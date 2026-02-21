@@ -179,6 +179,9 @@ def create_app() -> Flask:
 
         g.lang = _resolve_request_lang(url_lang)
 
+        if url_lang and is_supported_language(url_lang, supported_languages):
+            session["ui_lang"] = url_lang.strip().lower()
+
     @app.context_processor
     def inject_template_globals():
         return {

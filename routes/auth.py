@@ -1,25 +1,20 @@
 """
 Программа: «Paleta» – веб-приложение для работы с цветовыми палитрами.
 Модуль: routes/auth.py – маршруты аутентификации и управления сессиями.
-
-Назначение модуля:
-- Регистрация новых пользователей с проверкой сложности пароля.
-- Вход и выход из системы с использованием Flask-Login.
-- Восстановление пароля через email или телефон.
-- Загрузка пользователя по идентификатору для управления сессией.
 """
 
 from datetime import datetime, timedelta
 import secrets
 
-from flask import current_app, render_template, request, flash, redirect, url_for, session
-from flask_login import login_user, logout_user, login_required, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
+from flask import current_app, flash, g, redirect, render_template, request, session, url_for
+from flask_babel import gettext as _
+from flask_login import current_user, login_required, login_user, logout_user
+from werkzeug.security import check_password_hash, generate_password_hash
 
-from extensions import login_manager, db
+from extensions import db, login_manager
+from models.password_reset_token import PasswordResetToken
 from models.user import User
 from models.user_contact import UserContact
-from models.password_reset_token import PasswordResetToken
 from utils.contact_normalizer import normalize_email, normalize_phone
 from utils.rate_limit import get_client_identifier
 from utils.reset_delivery import send_password_reset_code
@@ -30,21 +25,33 @@ def load_user(user_id):
     return db.session.get(User, int(user_id))
 
 
+def _current_lang() -> str:
+    lang = (request.view_args or {}).get("lang") if request.view_args else None
+    if lang:
+        return lang
+    return getattr(g, "lang", current_app.config.get("DEFAULT_LANGUAGE", "en"))
+
+
+def _localized_redirect(endpoint: str, code: int = 302, **values):
+    values.setdefault("lang", _current_lang())
+    return redirect(url_for(endpoint, **values), code=code)
+
+
 def _validate_password_strength(password: str, username: str | None = None) -> str | None:
     if not (10 <= len(password) <= 16):
-        return "Пароль должен содержать от 10 до 16 символов."
+        return _("Пароль должен содержать от 10 до 16 символов.")
     if any(ch.isspace() for ch in password):
-        return "Пароль не должен содержать пробелы."
+        return _("Пароль не должен содержать пробелы.")
     if not any(ch.isupper() for ch in password):
-        return "Пароль должен содержать хотя бы одну заглавную букву."
+        return _("Пароль должен содержать хотя бы одну заглавную букву.")
     if not any(ch.islower() for ch in password):
-        return "Пароль должен содержать хотя бы одну строчную букву."
+        return _("Пароль должен содержать хотя бы одну строчную букву.")
     if not any(ch.isdigit() for ch in password):
-        return "Пароль должен содержать хотя бы одну цифру."
+        return _("Пароль должен содержать хотя бы одну цифру.")
     if not any(not ch.isalnum() for ch in password):
-        return "Пароль должен содержать хотя бы один спецсимвол."
+        return _("Пароль должен содержать хотя бы один спецсимвол.")
     if username and username.lower() in password.lower():
-        return "Пароль не должен содержать имя пользователя."
+        return _("Пароль не должен содержать имя пользователя.")
     return None
 
 
@@ -66,13 +73,13 @@ def _find_user_contact(channel: str, destination: str) -> UserContact | None:
 
 def _validate_username(username: str) -> str | None:
     if not username:
-        return "Имя пользователя обязательно."
+        return _("Имя пользователя обязательно.")
     if len(username) < 3:
-        return "Имя пользователя должно содержать минимум 3 символа."
+        return _("Имя пользователя должно содержать минимум 3 символа.")
     if len(username) > 80:
-        return "Имя пользователя не должно превышать 80 символов."
+        return _("Имя пользователя не должно превышать 80 символов.")
     if any(ch.isspace() for ch in username):
-        return "Имя пользователя не должно содержать пробелы."
+        return _("Имя пользователя не должно содержать пробелы.")
     return None
 
 
@@ -137,12 +144,16 @@ def register_routes(app):
         rate_key = f"{bucket}:{rate_identity}"
         return not limiter.is_allowed(rate_key, limit, window_seconds)
 
-    @app.route("/register", methods=["GET", "POST"])
-    def register():
+    @app.get("/register")
+    def register_legacy():
+        return redirect(url_for("register", lang="ru"), code=301)
+
+    @app.route("/<lang>/register", methods=["GET", "POST"])
+    def register(lang):
         if request.method == "POST":
             if _is_rate_limited("register", limit=10, window_seconds=15 * 60):
-                flash("Слишком много попыток регистрации. Попробуйте через несколько минут.", "error")
-                return redirect(url_for("register"))
+                flash(_("Слишком много попыток регистрации. Попробуйте через несколько минут."), "error")
+                return _localized_redirect("register")
 
             username = (request.form.get("username") or "").strip()
             password = request.form.get("password") or ""
@@ -152,42 +163,42 @@ def register_routes(app):
             phone = normalize_phone(raw_phone)
 
             if not username or not password:
-                flash("Пожалуйста, заполните все поля", "error")
-                return redirect(url_for("register"))
+                flash(_("Пожалуйста, заполните все поля"), "error")
+                return _localized_redirect("register")
 
             username_error = _validate_username(username)
             if username_error:
                 flash(username_error, "error")
-                return redirect(url_for("register"))
+                return _localized_redirect("register")
 
             if not raw_email.strip() and not raw_phone.strip():
-                flash("Укажите email или номер телефона для восстановления пароля.", "error")
-                return redirect(url_for("register"))
+                flash(_("Укажите email или номер телефона для восстановления пароля."), "error")
+                return _localized_redirect("register")
 
             if raw_email.strip() and not email:
-                flash("Введите корректный email.", "error")
-                return redirect(url_for("register"))
+                flash(_("Введите корректный email."), "error")
+                return _localized_redirect("register")
 
             if raw_phone.strip() and not phone:
-                flash("Введите корректный номер телефона (от 10 до 15 цифр).", "error")
-                return redirect(url_for("register"))
+                flash(_("Введите корректный номер телефона (от 10 до 15 цифр)."), "error")
+                return _localized_redirect("register")
 
             password_error = _validate_password_strength(password, username=username)
             if password_error:
                 flash(password_error, "error")
-                return redirect(url_for("register"))
+                return _localized_redirect("register")
 
             if User.query.filter_by(username=username).first():
-                flash("Пользователь с таким именем уже существует", "error")
-                return redirect(url_for("register"))
+                flash(_("Пользователь с таким именем уже существует"), "error")
+                return _localized_redirect("register")
 
             if email and UserContact.query.filter_by(email=email).first():
-                flash("Этот email уже используется другим аккаунтом.", "error")
-                return redirect(url_for("register"))
+                flash(_("Этот email уже используется другим аккаунтом."), "error")
+                return _localized_redirect("register")
 
             if phone and UserContact.query.filter_by(phone=phone).first():
-                flash("Этот номер телефона уже используется другим аккаунтом.", "error")
-                return redirect(url_for("register"))
+                flash(_("Этот номер телефона уже используется другим аккаунтом."), "error")
+                return _localized_redirect("register")
 
             hashed_password = generate_password_hash(password, method="scrypt")
             new_user = User(username=username, password_hash=hashed_password)
@@ -195,20 +206,24 @@ def register_routes(app):
             db.session.add(new_user)
             db.session.commit()
 
-            flash("Регистрация успешна! Теперь войдите в систему", "success")
-            return redirect(url_for("login"))
+            flash(_("Регистрация успешна! Теперь войдите в систему"), "success")
+            return _localized_redirect("login")
 
         return render_template("register.html")
 
-    @app.route("/login", methods=["GET", "POST"])
-    def login():
+    @app.get("/login")
+    def login_legacy():
+        return redirect(url_for("login", lang="ru"), code=301)
+
+    @app.route("/<lang>/login", methods=["GET", "POST"])
+    def login(lang):
         if request.method == "POST":
             username = request.form.get("username")
             password = request.form.get("password")
 
             if _is_rate_limited("login_ip", limit=20, window_seconds=10 * 60):
-                flash("Слишком много попыток входа. Попробуйте позже.", "error")
-                return redirect(url_for("login"))
+                flash(_("Слишком много попыток входа. Попробуйте позже."), "error")
+                return _localized_redirect("login")
 
             username_key = (username or "").strip().lower() or "anonymous"
             if _is_rate_limited(
@@ -217,30 +232,43 @@ def register_routes(app):
                 window_seconds=10 * 60,
                 identity=username_key,
             ):
-                flash("Слишком много попыток входа для этого пользователя. Попробуйте позже.", "error")
-                return redirect(url_for("login"))
+                flash(_("Слишком много попыток входа для этого пользователя. Попробуйте позже."), "error")
+                return _localized_redirect("login")
 
             user = User.query.filter_by(username=username).first()
             if user and check_password_hash(user.password_hash, password):
                 login_user(user)
-                flash("Вход выполнен успешно", "success")
-                return redirect(url_for("index"))
-            else:
-                flash("Неверное имя пользователя или пароль", "error")
+                flash(_("Вход выполнен успешно"), "success")
+
+                next_url = request.args.get("next") or request.form.get("next")
+                if next_url and next_url.startswith("/"):
+                    return redirect(next_url)
+
+                return _localized_redirect("index")
+
+            flash(_("Неверное имя пользователя или пароль"), "error")
 
         return render_template("login.html")
 
     @app.get("/profile")
+    def profile_legacy():
+        return redirect(url_for("profile", lang="ru"), code=301)
+
+    @app.get("/<lang>/profile")
     @login_required
-    def profile():
+    def profile(lang):
         return render_template("profile.html", profile_contact=current_user.contact)
 
     @app.post("/profile/update")
+    def profile_update_legacy():
+        return redirect(url_for("profile_update", lang="ru"), code=308)
+
+    @app.post("/<lang>/profile/update")
     @login_required
-    def profile_update():
+    def profile_update(lang):
         if _is_rate_limited("profile_update", limit=15, window_seconds=15 * 60, identity=str(current_user.id)):
-            flash("Слишком много попыток изменения профиля. Попробуйте позже.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Слишком много попыток изменения профиля. Попробуйте позже."), "error")
+            return _localized_redirect("profile")
 
         username = (request.form.get("username") or "").strip()
         raw_email = request.form.get("email") or ""
@@ -248,36 +276,36 @@ def register_routes(app):
         current_password = request.form.get("current_password") or ""
 
         if not check_password_hash(current_user.password_hash, current_password):
-            flash("Для изменения профиля укажите текущий пароль.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Для изменения профиля укажите текущий пароль."), "error")
+            return _localized_redirect("profile")
 
         username_error = _validate_username(username)
         if username_error:
             flash(username_error, "error")
-            return redirect(url_for("profile"))
+            return _localized_redirect("profile")
 
         email = normalize_email(raw_email)
         phone = normalize_phone(raw_phone)
 
         if not raw_email.strip() and not raw_phone.strip():
-            flash("Укажите хотя бы один контакт: email или телефон.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Укажите хотя бы один контакт: email или телефон."), "error")
+            return _localized_redirect("profile")
 
         if raw_email.strip() and not email:
-            flash("Введите корректный email.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Введите корректный email."), "error")
+            return _localized_redirect("profile")
 
         if raw_phone.strip() and not phone:
-            flash("Введите корректный номер телефона (от 10 до 15 цифр).", "error")
-            return redirect(url_for("profile"))
+            flash(_("Введите корректный номер телефона (от 10 до 15 цифр)."), "error")
+            return _localized_redirect("profile")
 
         existing_username = User.query.filter(
             User.username == username,
             User.id != current_user.id,
         ).first()
         if existing_username:
-            flash("Это имя пользователя уже занято.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Это имя пользователя уже занято."), "error")
+            return _localized_redirect("profile")
 
         if email:
             existing_email = UserContact.query.filter(
@@ -285,8 +313,8 @@ def register_routes(app):
                 UserContact.user_id != current_user.id,
             ).first()
             if existing_email:
-                flash("Этот email уже используется другим аккаунтом.", "error")
-                return redirect(url_for("profile"))
+                flash(_("Этот email уже используется другим аккаунтом."), "error")
+                return _localized_redirect("profile")
 
         if phone:
             existing_phone = UserContact.query.filter(
@@ -294,8 +322,8 @@ def register_routes(app):
                 UserContact.user_id != current_user.id,
             ).first()
             if existing_phone:
-                flash("Этот номер телефона уже используется другим аккаунтом.", "error")
-                return redirect(url_for("profile"))
+                flash(_("Этот номер телефона уже используется другим аккаунтом."), "error")
+                return _localized_redirect("profile")
 
         current_user.username = username
         if current_user.contact is None:
@@ -304,38 +332,42 @@ def register_routes(app):
         current_user.contact.phone = phone or None
         db.session.commit()
 
-        flash("Профиль обновлён.", "success")
-        return redirect(url_for("profile"))
+        flash(_("Профиль обновлён."), "success")
+        return _localized_redirect("profile")
 
     @app.post("/profile/password/send-code")
+    def profile_send_password_code_legacy():
+        return redirect(url_for("profile_send_password_code", lang="ru"), code=308)
+
+    @app.post("/<lang>/profile/password/send-code")
     @login_required
-    def profile_send_password_code():
+    def profile_send_password_code(lang):
         if _is_rate_limited(
             "profile_password_send",
             limit=8,
             window_seconds=15 * 60,
             identity=str(current_user.id),
         ):
-            flash("Слишком много запросов на отправку кода. Попробуйте позже.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Слишком много запросов на отправку кода. Попробуйте позже."), "error")
+            return _localized_redirect("profile")
 
         channel = (request.form.get("channel") or "email").strip().lower()
         if channel not in {"email", "phone"}:
-            flash("Выберите корректный способ подтверждения: email или телефон.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Выберите корректный способ подтверждения: email или телефон."), "error")
+            return _localized_redirect("profile")
 
         contact = current_user.contact
         if not contact:
-            flash("Сначала добавьте email или телефон в личном кабинете.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Сначала добавьте email или телефон в личном кабинете."), "error")
+            return _localized_redirect("profile")
 
         destination = (contact.email if channel == "email" else contact.phone) or ""
         if not destination:
             if channel == "email":
-                flash("Для этого аккаунта не задан email.", "error")
+                flash(_("Для этого аккаунта не задан email."), "error")
             else:
-                flash("Для этого аккаунта не задан номер телефона.", "error")
-            return redirect(url_for("profile"))
+                flash(_("Для этого аккаунта не задан номер телефона."), "error")
+            return _localized_redirect("profile")
 
         if _is_rate_limited(
             f"profile_password_send_{channel}",
@@ -343,30 +375,34 @@ def register_routes(app):
             window_seconds=15 * 60,
             identity=destination,
         ):
-            flash("Слишком много запросов для этого контакта. Попробуйте позже.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Слишком много запросов для этого контакта. Попробуйте позже."), "error")
+            return _localized_redirect("profile")
 
         sent, code = _issue_reset_code(current_user.id, channel, destination)
         if sent:
-            flash("Код подтверждения отправлен.", "success")
+            flash(_("Код подтверждения отправлен."), "success")
         else:
-            flash("Не удалось отправить код. Проверьте настройки SMTP/SMS.", "error")
+            flash(_("Не удалось отправить код. Проверьте настройки SMTP/SMS."), "error")
             if current_app.debug:
-                flash(f"Dev-код: {code}", "info")
+                flash(_("Dev-код: %(code)s", code=code), "info")
 
-        return redirect(url_for("profile"))
+        return _localized_redirect("profile")
 
     @app.post("/profile/password/change")
+    def profile_change_password_legacy():
+        return redirect(url_for("profile_change_password", lang="ru"), code=308)
+
+    @app.post("/<lang>/profile/password/change")
     @login_required
-    def profile_change_password():
+    def profile_change_password(lang):
         if _is_rate_limited(
             "profile_password_change",
             limit=15,
             window_seconds=15 * 60,
             identity=str(current_user.id),
         ):
-            flash("Слишком много попыток смены пароля. Попробуйте позже.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Слишком много попыток смены пароля. Попробуйте позже."), "error")
+            return _localized_redirect("profile")
 
         channel = (request.form.get("channel") or "email").strip().lower()
         code = (request.form.get("code") or "").strip()
@@ -374,24 +410,24 @@ def register_routes(app):
         confirm_password = request.form.get("confirm_password") or ""
 
         if channel not in {"email", "phone"}:
-            flash("Выберите корректный способ подтверждения.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Выберите корректный способ подтверждения."), "error")
+            return _localized_redirect("profile")
 
         if not (code.isdigit() and len(code) == 6):
-            flash("Код должен состоять из 6 цифр.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Код должен состоять из 6 цифр."), "error")
+            return _localized_redirect("profile")
 
         if new_password != confirm_password:
-            flash("Пароли не совпадают.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Пароли не совпадают."), "error")
+            return _localized_redirect("profile")
 
         contact = current_user.contact
         destination = ""
         if contact:
             destination = (contact.email if channel == "email" else contact.phone) or ""
         if not destination:
-            flash("Сначала укажите выбранный контакт в личном кабинете.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Сначала укажите выбранный контакт в личном кабинете."), "error")
+            return _localized_redirect("profile")
 
         if _is_rate_limited(
             f"profile_password_change_{channel}",
@@ -399,33 +435,33 @@ def register_routes(app):
             window_seconds=15 * 60,
             identity=destination,
         ):
-            flash("Слишком много попыток для этого контакта. Попробуйте позже.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Слишком много попыток для этого контакта. Попробуйте позже."), "error")
+            return _localized_redirect("profile")
 
         token = _get_active_reset_token(current_user.id, channel, destination)
         if not token:
-            flash("Код не найден или истек. Запросите новый.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Код не найден или истек. Запросите новый."), "error")
+            return _localized_redirect("profile")
 
         max_attempts = max(3, int(current_app.config.get("PASSWORD_RESET_MAX_ATTEMPTS", 5)))
         if token.attempts >= max_attempts:
-            flash("Превышено число попыток. Запросите новый код.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Превышено число попыток. Запросите новый код."), "error")
+            return _localized_redirect("profile")
 
         if not check_password_hash(token.code_hash, code):
             token.attempts += 1
             db.session.commit()
-            flash("Неверный код подтверждения.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Неверный код подтверждения."), "error")
+            return _localized_redirect("profile")
 
         password_error = _validate_password_strength(new_password, username=current_user.username)
         if password_error:
             flash(password_error, "error")
-            return redirect(url_for("profile"))
+            return _localized_redirect("profile")
 
         if check_password_hash(current_user.password_hash, new_password):
-            flash("Новый пароль должен отличаться от текущего.", "error")
-            return redirect(url_for("profile"))
+            flash(_("Новый пароль должен отличаться от текущего."), "error")
+            return _localized_redirect("profile")
 
         now = datetime.utcnow()
         current_user.password_hash = generate_password_hash(new_password, method="scrypt")
@@ -438,30 +474,34 @@ def register_routes(app):
         ).update({PasswordResetToken.used_at: now}, synchronize_session=False)
         db.session.commit()
 
-        flash("Пароль успешно изменен.", "success")
-        return redirect(url_for("profile"))
+        flash(_("Пароль успешно изменен."), "success")
+        return _localized_redirect("profile")
 
-    @app.route("/forgot-password", methods=["GET", "POST"])
-    def forgot_password():
+    @app.get("/forgot-password")
+    def forgot_password_legacy():
+        return redirect(url_for("forgot_password", lang="ru"), code=301)
+
+    @app.route("/<lang>/forgot-password", methods=["GET", "POST"])
+    def forgot_password(lang):
         if request.method == "POST":
             if _is_rate_limited("forgot_password_ip", limit=8, window_seconds=15 * 60):
-                flash("Слишком много запросов. Попробуйте позже.", "error")
-                return redirect(url_for("forgot_password"))
+                flash(_("Слишком много запросов. Попробуйте позже."), "error")
+                return _localized_redirect("forgot_password")
 
             channel = (request.form.get("channel") or "email").strip().lower()
             raw_contact = (request.form.get("contact") or "").strip()
 
             if channel not in {"email", "phone"}:
-                flash("Выберите способ восстановления: email или телефон.", "error")
-                return redirect(url_for("forgot_password"))
+                flash(_("Выберите способ восстановления: email или телефон."), "error")
+                return _localized_redirect("forgot_password")
 
             destination = _normalize_contact(channel, raw_contact)
             if not destination:
                 if channel == "email":
-                    flash("Введите корректный email.", "error")
+                    flash(_("Введите корректный email."), "error")
                 else:
-                    flash("Введите корректный номер телефона (от 10 до 15 цифр).", "error")
-                return redirect(url_for("forgot_password"))
+                    flash(_("Введите корректный номер телефона (от 10 до 15 цифр)."), "error")
+                return _localized_redirect("forgot_password")
 
             if _is_rate_limited(
                 f"forgot_password_{channel}",
@@ -469,27 +509,31 @@ def register_routes(app):
                 window_seconds=15 * 60,
                 identity=destination,
             ):
-                flash("Слишком много запросов для этого контакта. Попробуйте позже.", "error")
-                return redirect(url_for("forgot_password"))
+                flash(_("Слишком много запросов для этого контакта. Попробуйте позже."), "error")
+                return _localized_redirect("forgot_password")
 
             user_contact = _find_user_contact(channel, destination)
             if user_contact and user_contact.user:
                 sent, code = _issue_reset_code(user_contact.user_id, channel, destination)
                 if not sent and current_app.debug:
-                    flash(f"Dev-код восстановления: {code}", "info")
+                    flash(_("Dev-код восстановления: %(code)s", code=code), "info")
 
             # Не раскрываем, существует ли аккаунт для указанного контакта.
-            flash("Если контакт найден, код восстановления отправлен.", "success")
-            return redirect(url_for("reset_password", channel=channel, contact=destination))
+            flash(_("Если контакт найден, код восстановления отправлен."), "success")
+            return _localized_redirect("reset_password", channel=channel, contact=destination)
 
         return render_template("forgot_password.html")
 
-    @app.route("/reset-password", methods=["GET", "POST"])
-    def reset_password():
+    @app.get("/reset-password")
+    def reset_password_legacy():
+        return redirect(url_for("reset_password", lang="ru"), code=301)
+
+    @app.route("/<lang>/reset-password", methods=["GET", "POST"])
+    def reset_password(lang):
         if request.method == "POST":
             if _is_rate_limited("reset_password_ip", limit=20, window_seconds=15 * 60):
-                flash("Слишком много попыток сброса пароля. Попробуйте позже.", "error")
-                return redirect(url_for("reset_password"))
+                flash(_("Слишком много попыток сброса пароля. Попробуйте позже."), "error")
+                return _localized_redirect("reset_password")
 
             channel = (request.form.get("channel") or "email").strip().lower()
             raw_contact = (request.form.get("contact") or "").strip()
@@ -498,29 +542,29 @@ def register_routes(app):
             confirm_password = request.form.get("confirm_password") or ""
 
             if channel not in {"email", "phone"}:
-                flash("Выберите корректный способ восстановления.", "error")
-                return redirect(url_for("reset_password"))
+                flash(_("Выберите корректный способ восстановления."), "error")
+                return _localized_redirect("reset_password")
 
             destination = _normalize_contact(channel, raw_contact)
             if not destination:
                 if channel == "email":
-                    flash("Введите корректный email.", "error")
+                    flash(_("Введите корректный email."), "error")
                 else:
-                    flash("Введите корректный номер телефона (от 10 до 15 цифр).", "error")
-                return redirect(url_for("reset_password"))
+                    flash(_("Введите корректный номер телефона (от 10 до 15 цифр)."), "error")
+                return _localized_redirect("reset_password")
 
             if not (code.isdigit() and len(code) == 6):
-                flash("Код восстановления должен состоять из 6 цифр.", "error")
-                return redirect(url_for("reset_password", channel=channel, contact=destination))
+                flash(_("Код восстановления должен состоять из 6 цифр."), "error")
+                return _localized_redirect("reset_password", channel=channel, contact=destination)
 
             if new_password != confirm_password:
-                flash("Пароли не совпадают.", "error")
-                return redirect(url_for("reset_password", channel=channel, contact=destination))
+                flash(_("Пароли не совпадают."), "error")
+                return _localized_redirect("reset_password", channel=channel, contact=destination)
 
             user_contact = _find_user_contact(channel, destination)
             if not user_contact or not user_contact.user:
-                flash("Неверный код или контакт. Проверьте данные.", "error")
-                return redirect(url_for("reset_password", channel=channel, contact=destination))
+                flash(_("Неверный код или контакт. Проверьте данные."), "error")
+                return _localized_redirect("reset_password", channel=channel, contact=destination)
 
             if _is_rate_limited(
                 f"reset_password_{channel}",
@@ -528,34 +572,34 @@ def register_routes(app):
                 window_seconds=15 * 60,
                 identity=destination,
             ):
-                flash("Слишком много попыток для этого контакта. Попробуйте позже.", "error")
-                return redirect(url_for("reset_password", channel=channel, contact=destination))
+                flash(_("Слишком много попыток для этого контакта. Попробуйте позже."), "error")
+                return _localized_redirect("reset_password", channel=channel, contact=destination)
 
             token = _get_active_reset_token(user_contact.user_id, channel, destination)
 
             if not token:
-                flash("Код не найден или истек. Запросите новый код.", "error")
-                return redirect(url_for("forgot_password"))
+                flash(_("Код не найден или истек. Запросите новый код."), "error")
+                return _localized_redirect("forgot_password")
 
             max_attempts = max(3, int(current_app.config.get("PASSWORD_RESET_MAX_ATTEMPTS", 5)))
             if token.attempts >= max_attempts:
-                flash("Превышено число попыток. Запросите новый код.", "error")
-                return redirect(url_for("forgot_password"))
+                flash(_("Превышено число попыток. Запросите новый код."), "error")
+                return _localized_redirect("forgot_password")
 
             if not check_password_hash(token.code_hash, code):
                 token.attempts += 1
                 db.session.commit()
-                flash("Неверный код восстановления.", "error")
-                return redirect(url_for("reset_password", channel=channel, contact=destination))
+                flash(_("Неверный код восстановления."), "error")
+                return _localized_redirect("reset_password", channel=channel, contact=destination)
 
             password_error = _validate_password_strength(new_password, username=user_contact.user.username)
             if password_error:
                 flash(password_error, "error")
-                return redirect(url_for("reset_password", channel=channel, contact=destination))
+                return _localized_redirect("reset_password", channel=channel, contact=destination)
 
             if check_password_hash(user_contact.user.password_hash, new_password):
-                flash("Новый пароль должен отличаться от текущего.", "error")
-                return redirect(url_for("reset_password", channel=channel, contact=destination))
+                flash(_("Новый пароль должен отличаться от текущего."), "error")
+                return _localized_redirect("reset_password", channel=channel, contact=destination)
 
             now = datetime.utcnow()
             user_contact.user.password_hash = generate_password_hash(new_password, method="scrypt")
@@ -568,8 +612,8 @@ def register_routes(app):
             ).update({PasswordResetToken.used_at: now}, synchronize_session=False)
             db.session.commit()
 
-            flash("Пароль обновлен. Теперь вы можете войти с новым паролем.", "success")
-            return redirect(url_for("login"))
+            flash(_("Пароль обновлен. Теперь вы можете войти с новым паролем."), "success")
+            return _localized_redirect("login")
 
         prefill_channel = (request.args.get("channel") or "email").strip().lower()
         if prefill_channel not in {"email", "phone"}:
@@ -581,11 +625,14 @@ def register_routes(app):
             prefill_contact=prefill_contact,
         )
 
-    @app.route("/logout", methods=["POST"])
+    @app.post("/logout")
+    def logout_legacy():
+        return redirect(url_for("logout", lang="ru"), code=308)
+
+    @app.route("/<lang>/logout", methods=["POST"])
     @login_required
-    def logout():
-        # Очищаем данные о последней загрузке при выходе из аккаунта
+    def logout(lang):
         session.pop("last_upload", None)
         logout_user()
-        flash("Вы вышли из системы", "info")
-        return redirect(url_for("index"))
+        flash(_("Вы вышли из системы"), "info")
+        return _localized_redirect("index")

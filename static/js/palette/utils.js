@@ -1,3 +1,5 @@
+const t = window.t || ((key, fallback) => fallback || key);
+
 export function dataURLToBlob(dataURL) {
     const parts = dataURL.split(';base64,');
     const contentType = parts[0].split(':')[1];
@@ -68,15 +70,15 @@ export function showToast(message, type = 'success') {
 export async function copyToClipboard(text) {
     try {
         await navigator.clipboard.writeText(text);
-        showToast('HEX код скопирован!');
+        showToast(t('hex_copied', 'HEX код скопирован!'));
     } catch (error) {
-        console.error('Ошибка копирования:', error);
+        console.error(t('copy_error', 'Ошибка копирования:'), error);
         const textArea = document.createElement('textarea');
         textArea.value = text;
         document.body.appendChild(textArea);
         textArea.select();
         document.execCommand('copy');
         document.body.removeChild(textArea);
-        showToast('HEX код скопирован!');
+        showToast(t('hex_copied', 'HEX код скопирован!'));
     }
 }

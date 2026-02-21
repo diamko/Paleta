@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Вход
+    {{ _('Вход') }}
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="card-title mb-0">Вход в систему</h3>
+                    <h3 class="card-title mb-0">{{ _('Вход в систему') }}</h3>
                 </div>
                 <div class="card-body">
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -23,39 +23,42 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-                    
+
                     <form method="POST" id="loginForm">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        {% if request.args.get('next') %}
+                        <input type="hidden" name="next" value="{{ request.args.get('next') }}">
+                        {% endif %}
                         <div class="mb-3">
-                            <label for="username" class="form-label">Имя пользователя</label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="username" 
-                                name="username" 
+                            <label for="username" class="form-label">{{ _('Имя пользователя') }}</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="username"
+                                name="username"
                                 required
-                                oninvalid="this.setCustomValidity('Пожалуйста, заполните поле имени пользователя')"
+                                oninvalid="this.setCustomValidity('{{ _('Пожалуйста, заполните поле имени пользователя') }}')"
                                 oninput="this.setCustomValidity('')"
                             >
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Пароль</label>
-                            <input 
-                                type="password" 
-                                class="form-control" 
-                                id="password" 
-                                name="password" 
+                            <label for="password" class="form-label">{{ _('Пароль') }}</label>
+                            <input
+                                type="password"
+                                class="form-control"
+                                id="password"
+                                name="password"
                                 required
-                                oninvalid="this.setCustomValidity('Пожалуйста, заполните поле пароля')"
+                                oninvalid="this.setCustomValidity('{{ _('Пожалуйста, заполните поле пароля') }}')"
                                 oninput="this.setCustomValidity('')"
                             >
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Войти</button>
+                        <button type="submit" class="btn btn-primary w-100">{{ _('Войти') }}</button>
                     </form>
-                    
+
                     <div class="text-center mt-3">
-                        <p class="mb-1"><a href="{{ url_for('forgot_password') }}">Забыли пароль?</a></p>
-                        <p>Нет аккаунта? <a href="{{ url_for('register') }}">Зарегистрироваться</a></p>
+                        <p class="mb-1"><a href="{{ url_for('forgot_password') }}">{{ _('Забыли пароль?') }}</a></p>
+                        <p>{{ _('Нет аккаунта?') }} <a href="{{ url_for('register') }}">{{ _('Зарегистрироваться') }}</a></p>
                     </div>
                 </div>
             </div>

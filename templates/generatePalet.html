@@ -1,55 +1,44 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Генерация случайной палитры
+    {{ _('Генерация случайной палитры') }}
 {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-8">
-            <h1 class="gradient-text text-center mb-4">Генерация случайной палитры</h1>
-            <p class="text-center mb-5">Создайте уникальную цветовую палитру с помощью генератора случайных цветов</p>
+            <h1 class="gradient-text text-center mb-4">{{ _('Генерация случайной палитры') }}</h1>
+            <p class="text-center mb-5">{{ _('Создайте уникальную цветовую палитру с помощью генератора случайных цветов') }}</p>
 
             <div class="text-center mb-4">
-                <label for="colorCount" class="form-label">Количество цветов:</label>
+                <label for="colorCount" class="form-label">{{ _('Количество цветов:') }}</label>
                 <select id="colorCount" class="form-select d-inline-block w-auto">
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5" selected>5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                    <option value="13">13</option>
-                    <option value="14">14</option>
-                    <option value="15">15</option>
+                    {% for value in range(3, 16) %}
+                    <option value="{{ value }}" {% if value == 5 %}selected{% endif %}>{{ value }}</option>
+                    {% endfor %}
                 </select>
-                <button id="generateBtn" type="button" class="btn btn-primary ms-2">Сгенерировать палитру</button>
+                <button id="generateBtn" type="button" class="btn btn-primary ms-2">{{ _('Сгенерировать палитру') }}</button>
             </div>
 
-            <!-- Цветовая палитра -->
             <div id="colorPalette" class="d-flex flex-wrap gap-2 mb-3 justify-content-center"></div>
             <p class="palette-edit-hint text-muted text-center mb-0">
-                Меняйте цвет через палитру или HEX-поле. Нажмите на цвет, чтобы скопировать HEX.
+                {{ _('Меняйте цвет через палитру или HEX-поле. Нажмите на цвет, чтобы скопировать HEX.') }}
             </p>
 
             <div id="actionsSection" class="mt-4 text-center d-none">
-                <h5>Действия</h5>
+                <h5>{{ _('Действия') }}</h5>
                 {% if current_user.is_authenticated %}
-                    <button id="savePaletteBtn" type="button" class="btn btn-success me-2 my-2" data-bs-toggle="modal" data-bs-target="#saveModal">Сохранить палитру</button>
+                    <button id="savePaletteBtn" type="button" class="btn btn-success me-2 my-2" data-bs-toggle="modal" data-bs-target="#saveModal">{{ _('Сохранить палитру') }}</button>
                 {% else %}
-                    <p class="text-muted mb-2">Чтобы сохранить палитру, <a href="{{ url_for('login') }}">войдите</a> или <a href="{{ url_for('register') }}">зарегистрируйтесь</a>.</p>
+                    <p class="text-muted mb-2">{{ _('Чтобы сохранить палитру,') }} <a href="{{ url_for('login') }}">{{ _('войдите') }}</a> {{ _('или') }} <a href="{{ url_for('register') }}">{{ _('зарегистрируйтесь') }}</a>.</p>
                 {% endif %}
                 <div class="export-actions d-flex flex-wrap gap-2" role="group">
-                    <button type="button" class="btn btn-outline-primary export-option" data-format="json">Экспорт JSON</button>
-                    <button type="button" class="btn btn-outline-primary export-option" data-format="gpl">Экспорт GPL</button>
-                    <button type="button" class="btn btn-outline-primary export-option" data-format="ase">Экспорт ASE</button>
-                    <button type="button" class="btn btn-outline-primary export-option" data-format="csv">Экспорт CSV</button>
-                    <button type="button" class="btn btn-outline-primary export-option" data-format="aco">Экспорт ACO</button>
+                    <button type="button" class="btn btn-outline-primary export-option" data-format="json">{{ _('Экспорт JSON') }}</button>
+                    <button type="button" class="btn btn-outline-primary export-option" data-format="gpl">{{ _('Экспорт GPL') }}</button>
+                    <button type="button" class="btn btn-outline-primary export-option" data-format="ase">{{ _('Экспорт ASE') }}</button>
+                    <button type="button" class="btn btn-outline-primary export-option" data-format="csv">{{ _('Экспорт CSV') }}</button>
+                    <button type="button" class="btn btn-outline-primary export-option" data-format="aco">{{ _('Экспорт ACO') }}</button>
                 </div>
             </div>
         </div>

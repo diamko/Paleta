@@ -1,6 +1,10 @@
 import { showToast } from './utils.js';
 import { withCsrfHeaders } from '../security/csrf.js';
 
+const t = window.t || ((key, fallback) => fallback || key);
+const currentLang = (window.currentLang || 'en').toLowerCase();
+const dateLocale = currentLang === 'ru' ? 'ru-RU' : 'en-US';
+
 export function createUploadController({ elements, state, paletteView, markerController }) {
     function preventDefaults(event) {
         event.preventDefault();
@@ -9,12 +13,12 @@ export function createUploadController({ elements, state, paletteView, markerCon
 
     async function handleImageFile(file) {
         if (!file.type.match('image.*')) {
-            alert('Пожалуйста, выберите изображение');
+            alert(t('select_image', 'Пожалуйста, выберите изображение'));
             return;
         }
 
         if (file.size > 16 * 1024 * 1024) {
-            alert('Файл слишком большой. Максимальный размер: 16 МБ');
+            alert(t('file_too_large', 'Файл слишком большой. Максимальный размер: 16 МБ'));
             return;
         }
 
@@ -40,7 +44,7 @@ export function createUploadController({ elements, state, paletteView, markerCon
                 body: formData,
             });
 
-            if (!response.ok) throw new Error('Ошибка загрузки изображения');
+            if (!response.ok) throw new Error(t('upload_error', 'Ошибка загрузки изображения'));
 
             const data = await response.json();
 
@@ -54,11 +58,11 @@ export function createUploadController({ elements, state, paletteView, markerCon
 
                 addRecentUploadCard(data.filename);
             } else {
-                alert(data.error || 'Ошибка при анализе изображения');
+                alert(data.error || t('analyze_error', 'Ошибка при анализе изображения'));
             }
         } catch (error) {
-            console.error('Ошибка при загрузке изображения:', error);
-            alert('Произошла ошибка при загрузке файла');
+            console.error('Image upload error:', error);
+            alert(t('upload_file_error', 'Произошла ошибка при загрузке файла'));
         } finally {
             paletteView.showLoading(false);
         }
@@ -70,7 +74,7 @@ export function createUploadController({ elements, state, paletteView, markerCon
         try {
             const response = await fetch(`/static/uploads/${filename}`);
             if (!response.ok) {
-                showToast('Не удалось загрузить сохранённое изображение', 'error');
+                showToast(t('saved_image_load_error', 'Не удалось загрузить сохранённое изображение'), 'error');
                 return;
             }
 
@@ -79,8 +83,8 @@ export function createUploadController({ elements, state, paletteView, markerCon
 
             await handleImageFile(file);
         } catch (error) {
-            console.error('Ошибка при использовании сохранённого изображения:', error);
-            showToast('Произошла ошибка при использовании сохранённого изображения', 'error');
+            console.error('Use existing upload error:', error);
+            showToast(t('saved_image_use_error', 'Произошла ошибка при использовании сохранённого изображения'), 'error');
         }
     }
 
@@ -93,7 +97,7 @@ export function createUploadController({ elements, state, paletteView, markerCon
         elements.recentUploadsRow.classList.remove('d-none');
 
         const now = new Date();
-        const formatted = now.toLocaleString('ru-RU', {
+        const formatted = now.toLocaleString(dateLocale, {
             day: '2-digit',
             month: '2-digit',
             year: 'numeric',
@@ -108,7 +112,7 @@ export function createUploadController({ elements, state, paletteView, markerCon
                 <div class="ratio ratio-4x3">
                     <img src="/static/uploads/${filename}"
                          class="card-img-top object-fit-cover"
-                         alt="Недавнее изображение">
+                         alt="${t('recent_image_alt', 'Недавнее изображение')}">
                 </div>
                 <div class="card-body p-2">
                     <small class="text-muted d-block mb-2">
@@ -117,7 +121,7 @@ export function createUploadController({ elements, state, paletteView, markerCon
                     <button type="button"
                             class="btn btn-sm btn-outline-primary w-100 btn-use-upload"
                             data-filename="${filename}">
-                        Использовать
+                        ${t('use_upload', 'Использовать')}
                     </button>
                 </div>
             </div>
@@ -146,10 +150,8 @@ export function createUploadController({ elements, state, paletteView, markerCon
             elements.imagePreview.style.display = 'block';
             elements.resultSection.classList.remove('d-none');
             elements.uploadZone.style.display = 'none';
-
-            console.log('Загружены сохраненные данные из localStorage');
         } catch (error) {
-            console.error('Ошибка загрузки сохраненных данных:', error);
+            console.error('Restore saved data error:', error);
         }
     }
 

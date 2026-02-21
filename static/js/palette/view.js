@@ -1,5 +1,7 @@
 import { copyToClipboard, normalizeHexColor, showToast } from './utils.js';
 
+const t = window.t || ((key, fallback) => fallback || key);
+
 export function createPaletteView({ elements, state, markerController }) {
     function setColorAtIndex(index, rawValue, options = {}) {
         const normalized = normalizeHexColor(rawValue);
@@ -8,7 +10,7 @@ export function createPaletteView({ elements, state, markerController }) {
         if (!normalized || index < 0 || index >= state.currentColors.length) {
             if (showError && state.paletteControls[index]?.hexInput) {
                 state.paletteControls[index].hexInput.value = state.currentColors[index] || '#000000';
-                showToast('Введите корректный HEX-код, например #A1B2C3', 'error');
+                showToast(t('hex_validation_error', 'Введите корректный HEX-код, например #A1B2C3'), 'error');
             }
             return false;
         }
@@ -50,10 +52,10 @@ export function createPaletteView({ elements, state, markerController }) {
             const item = document.createElement('div');
             item.className = 'palette-edit-item';
             item.innerHTML = `
-                <button type="button" class="palette-edit-preview" title="Скопировать HEX"></button>
+                <button type="button" class="palette-edit-preview" title="${t('copy_hex_title', 'Скопировать HEX')}"></button>
                 <div class="palette-edit-controls">
-                    <input type="color" class="palette-edit-picker" value="${color.toLowerCase()}" aria-label="Выбор цвета ${index + 1}">
-                    <input type="text" class="palette-edit-hex" value="${color}" maxlength="7" spellcheck="false" aria-label="HEX цвета ${index + 1}">
+                    <input type="color" class="palette-edit-picker" value="${color.toLowerCase()}" aria-label="${t('color_picker_label', 'Выбор цвета {index}', { index: index + 1 })}">
+                    <input type="text" class="palette-edit-hex" value="${color}" maxlength="7" spellcheck="false" aria-label="${t('color_hex_label', 'HEX цвета {index}', { index: index + 1 })}">
                 </div>
             `;
 
@@ -127,7 +129,7 @@ export function createPaletteView({ elements, state, markerController }) {
         localStorage.removeItem('lastImageDataURL');
 
         elements.uploadZone.scrollIntoView({ behavior: 'smooth' });
-        showToast('Готово для новой загрузки!');
+        showToast(t('ready_for_new_upload', 'Готово для новой загрузки!'));
     }
 
     return {

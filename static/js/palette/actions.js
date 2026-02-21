@@ -1,6 +1,9 @@
 import { dataURLToBlob, showToast } from './utils.js';
 import { withCsrfHeaders } from '../security/csrf.js';
 
+const t = window.t || ((key, fallback) => fallback || key);
+const currentLang = window.currentLang || 'en';
+
 export function bindPaletteActions({ elements, state, paletteView, markerController }) {
     elements.imagePreview.addEventListener('load', () => {
         markerController.rebuildSampleCanvas();
@@ -14,11 +17,9 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
     elements.reanalyzeBtn.addEventListener('click', async (event) => {
         event.stopPropagation();
 
-        console.log('Попытка пересчёта палитры. currentImageFile:', state.currentImageFile);
-
         const savedImageDataURL = localStorage.getItem('lastImageDataURL');
         if (!state.currentImageFile && !savedImageDataURL) {
-            showToast('Сначала загрузите изображение!', 'error');
+            showToast(t('upload_image_first', 'Сначала загрузите изображение!'), 'error');
             return;
         }
 
@@ -30,11 +31,9 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
 
             if (state.currentImageFile) {
                 formData.append('image', state.currentImageFile);
-                console.log('Для пересчёта используется исходный File-объект');
             } else if (savedImageDataURL) {
                 const blob = dataURLToBlob(savedImageDataURL);
                 formData.append('image', blob, 'image.png');
-                console.log('Для пересчёта используется DataURL из localStorage');
             }
 
             const response = await fetch('/api/upload', {
@@ -49,13 +48,13 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
                 state.currentColors = data.palette;
                 paletteView.displayPalette(state.currentColors);
                 localStorage.setItem('lastPalette', JSON.stringify(state.currentColors));
-                showToast('Палитра пересчитана!');
+                showToast(t('palette_recalculated', 'Палитра пересчитана!'));
             } else {
-                showToast('Ошибка при пересчете палитры', 'error');
+                showToast(data.error || t('palette_recalculate_error', 'Ошибка при пересчете палитры'), 'error');
             }
         } catch (error) {
-            console.error('Ошибка при пересчёте палитры:', error);
-            showToast('Произошла ошибка при пересчете', 'error');
+            console.error('Palette recalculation error:', error);
+            showToast(t('palette_recalculate_fail', 'Произошла ошибка при пересчете'), 'error');
         } finally {
             paletteView.showLoading(false);
         }
@@ -72,7 +71,7 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
             event.stopPropagation();
 
             if (state.currentColors.length === 0) {
-                showToast('Сначала создайте палитру!', 'error');
+                showToast(t('create_palette_first', 'Сначала создайте палитру!'), 'error');
                 return;
             }
 
@@ -105,11 +104,11 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
             const paletteName = originalValue.trim();
 
             if (originalValue && !paletteName) {
-                showToast('Название палитры не может состоять только из пробелов', 'error');
+                showToast(t('palette_name_spaces', 'Название палитры не может состоять только из пробелов'), 'error');
                 return;
             }
 
-            const finalName = paletteName || 'Моя палитра';
+            const finalName = paletteName || t('default_palette_name', 'Моя палитра');
             const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
 
             try {
@@ -126,17 +125,17 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        showToast('Сессия истекла. Пожалуйста, войдите снова.', 'error');
-                        window.location.href = '/login';
+                        showToast(t('session_expired_login', 'Сессия истекла. Пожалуйста, войдите снова.'), 'error');
+                        window.location.href = `/${currentLang}/login`;
                         return;
                     }
 
-                    let errorMessage = 'Ошибка при сохранении';
+                    let errorMessage = t('save_error', 'Ошибка при сохранении');
                     try {
                         const errorData = await response.json();
                         errorMessage = errorData.error || errorMessage;
                     } catch (_error) {
-                        // Игнорируем ошибку разбора, используем дефолтное сообщение.
+                        // Ignore JSON parse errors.
                     }
 
                     showToast(errorMessage, 'error');
@@ -146,14 +145,14 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
                 const data = await response.json();
 
                 if (data.success) {
-                    showToast('Палитра сохранена!');
+                    showToast(t('palette_saved', 'Палитра сохранена!'));
                     if (saveModal) saveModal.hide();
                 } else {
-                    showToast(data.error || 'Ошибка при сохранении', 'error');
+                    showToast(data.error || t('save_error', 'Ошибка при сохранении'), 'error');
                 }
             } catch (error) {
-                console.error('Ошибка сохранения:', error);
-                showToast('Ошибка при сохранении палитры', 'error');
+                console.error('Palette save error:', error);
+                showToast(t('save_palette_error', 'Ошибка при сохранении палитры'), 'error');
             }
         });
     }
@@ -164,7 +163,7 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
             event.stopPropagation();
 
             if (state.currentColors.length === 0) {
-                showToast('Сначала создайте палитру!', 'error');
+                showToast(t('create_palette_first', 'Сначала создайте палитру!'), 'error');
                 return;
             }
 
@@ -180,12 +179,12 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
                 });
 
                 if (!response.ok) {
-                    let errorMessage = 'Ошибка при экспорте';
+                    let errorMessage = t('export_error', 'Ошибка при экспорте');
                     try {
                         const errorData = await response.json();
                         errorMessage = errorData.error || errorMessage;
                     } catch (_error) {
-                        // Игнорируем ошибку разбора, используем дефолтный текст.
+                        // Ignore JSON parse errors.
                     }
                     showToast(errorMessage, 'error');
                     return;
@@ -201,8 +200,8 @@ export function bindPaletteActions({ elements, state, paletteView, markerControl
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(link);
             } catch (error) {
-                console.error('Ошибка экспорта:', error);
-                showToast('Ошибка при экспорте', 'error');
+                console.error('Palette export error:', error);
+                showToast(t('export_error', 'Ошибка при экспорте'), 'error');
             }
         });
     });

@@ -1,241 +1,88 @@
 {% extends 'base.html' %}
 
 {% block title %}
-FAQ - Часто задаваемые вопросы
+{{ _('FAQ - Часто задаваемые вопросы') }}
 {% endblock %}
 
 {% block content %}
 <div class="faq-page">
     <div class="row mb-5">
         <div class="col-12 text-center">
-            <h1 class="gradient-text mb-3">Часто задаваемые вопросы</h1>
-            <p class="lead text-muted mb-4">Найдите ответы на популярные вопросы о работе с генератором палитр</p>
-            <div class="d-flex justify-content-center mb-4">
-                <i class="fas fa-palette fa-3x text-primary me-3"></i>
-                <i class="fas fa-question-circle fa-3x text-secondary"></i>
-            </div>
+            <h1 class="gradient-text mb-3">{{ _('Часто задаваемые вопросы') }}</h1>
+            <p class="lead text-muted mb-4">{{ _('Найдите ответы на популярные вопросы о работе с генератором палитр') }}</p>
         </div>
     </div>
 
     <div class="row">
-        <!-- Основные вопросы -->
         <div class="col-lg-8 mx-auto">
             <div class="accordion" id="faqAccordion">
-                <!-- Вопрос 1 -->
                 <div class="accordion-item shadow-sm mb-3 border-0 rounded-3">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-semibold fs-5" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
-                            <i class="fas fa-image me-3 text-primary"></i>
-                            Как извлечь палитру из изображения?
+                        <button class="accordion-button collapsed fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="false" aria-controls="faq1">
+                            {{ _('Как извлечь палитру из изображения?') }}
                         </button>
                     </h2>
                     <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            <p>Для извлечения палитры из изображения:</p>
                             <ol>
-                                <li>Перейдите на страницу <a href="{{ url_for('generatePalet') }}"
-                                        class="text-decoration-none">"Генерация палитры"</a></li>
-                                <li>Нажмите на область загрузки или перетащите изображение</li>
-                                <li>Выберите количество цветов для извлечения (от 2 до 10)</li>
-                                <li>Дождитесь обработки изображения</li>
-                                <li>Получите готовую палитру с HEX-кодами</li>
+                                <li>{{ _('Откройте главную страницу и загрузите изображение.') }}</li>
+                                <li>{{ _('Выберите количество цветов и дождитесь анализа.') }}</li>
+                                <li>{{ _('Скопируйте, экспортируйте или сохраните палитру.') }}</li>
                             </ol>
-                            <p class="mb-0"><strong>Поддерживаемые форматы:</strong> PNG, JPG, JPEG, WEBP</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Вопрос 2 -->
                 <div class="accordion-item shadow-sm mb-3 border-0 rounded-3">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-semibold fs-5" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
-                            <i class="fas fa-random me-3 text-primary"></i>
-                            Как сгенерировать случайную палитру?
+                        <button class="accordion-button collapsed fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+                            {{ _('Нужно ли регистрироваться?') }}
                         </button>
                     </h2>
                     <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            <p>Генерация случайной палитры очень проста:</p>
-                            <ol>
-                                <li>На странице <a href="{{ url_for('generatePalet') }}"
-                                        class="text-decoration-none">"Генерация палитры"</a> найдите блок "Случайная
-                                    палитра"</li>
-                                <li>Нажмите кнопку <span class="badge bg-primary">Сгенерировать случайную палитру</span>
-                                </li>
-                                <li>Система создаст уникальную палитру из гармоничных цветов</li>
-                                <li>Вы можете повторно генерировать палитру, пока не найдете идеальный вариант</li>
-                                <li>Сохраните понравившуюся палитру в свой аккаунт</li>
-                            </ol>
-                            <div class="alert alert-info mt-3">
-                                <i class="fas fa-lightbulb me-2"></i>
-                                <strong>Совет:</strong> Используйте случайные палитры для вдохновения или когда нужны
-                                свежие идеи!
-                            </div>
+                            <p>{{ _('Регистрация не обязательна для генерации и экспорта палитр.') }}</p>
+                            <p class="mb-0">{{ _('Аккаунт нужен для сохранения палитр и доступа к разделу "Мои палитры".') }}</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Вопрос 3 -->
                 <div class="accordion-item shadow-sm mb-3 border-0 rounded-3">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-semibold fs-5" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
-                            <i class="fas fa-save me-3 text-primary"></i>
-                            Как сохранить палитру?
+                        <button class="accordion-button collapsed fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+                            {{ _('Какие форматы экспорта поддерживаются?') }}
                         </button>
                     </h2>
                     <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            <p>Сохранение палитры доступно только для зарегистрированных пользователей:</p>
-                            <ol>
-                                <li><a href="{{ url_for('register') }}"
-                                        class="text-decoration-none">Зарегистрируйтесь</a> или <a
-                                        href="{{ url_for('login') }}" class="text-decoration-none">войдите</a> в аккаунт
-                                </li>
-                                <li>Сгенерируйте или извлеките палитру</li>
-                                <li>Нажмите кнопку <span class="badge bg-success">Сохранить палитру</span></li>
-                                <li>Введите название для вашей палитры</li>
-                                <li>Подтвердите сохранение</li>
-                            </ol>
-                            <p>Все сохраненные палитры доступны в разделе <a href="{{ url_for('myPalet') }}"
-                                    class="text-decoration-none">"Мои палитры"</a>.</p>
-                            <div class="alert alert-warning mt-3">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                <strong>Важно:</strong> Вы можете сохранять до 50 палитр в своем аккаунте.
-                            </div>
+                            <p class="mb-0">{{ _('Поддерживаются форматы JSON, GPL, ASE, CSV и ACO.') }}</p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Вопрос 5 -->
                 <div class="accordion-item shadow-sm mb-3 border-0 rounded-3">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-semibold fs-5" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
-                            <i class="fas fa-users me-3 text-primary"></i>
-                            Нужно ли регистрироваться для использования?
+                        <button class="accordion-button collapsed fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+                            {{ _('Как восстановить пароль?') }}
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body">
+                            <p>{{ _('На странице входа нажмите "Забыли пароль?" и выберите email или телефон.') }}</p>
+                            <p class="mb-0">{{ _('После получения кода введите его на странице сброса и задайте новый пароль.') }}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item shadow-sm mb-3 border-0 rounded-3">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed fw-semibold fs-5" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+                            {{ _('Есть ли мобильная версия?') }}
                         </button>
                     </h2>
                     <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                         <div class="accordion-body">
-                            <p>Регистрация не обязательна для базовых функций:</p>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="card border-success mb-3 border-0 shadow-sm">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-success">
-                                                <i class="fas fa-check-circle me-2"></i>
-                                                Без регистрации
-                                            </h5>
-                                            <ul class="list-unstyled mb-0">
-                                                <li><i class="fas fa-check text-success me-2"></i>Генерация случайных
-                                                    палитр</li>
-                                                <li><i class="fas fa-check text-success me-2"></i>Извлечение палитр из
-                                                    изображений</li>
-                                                <li><i class="fas fa-check text-success me-2"></i>Экспорт палитр</li>
-                                                <li><i class="fas fa-check text-success me-2"></i>Копирование HEX-кодов
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="card border-primary mb-3 border-0 shadow-sm">
-                                        <div class="card-body">
-                                            <h5 class="card-title text-primary">
-                                                <i class="fas fa-star me-2"></i>
-                                                С регистрацией
-                                            </h5>
-                                            <ul class="list-unstyled mb-0">
-                                                <li><i class="fas fa-plus text-primary me-2"></i>Сохранение палитр</li>
-                                                <li><i class="fas fa-plus text-primary me-2"></i>Доступ к "Моим
-                                                    палитрам"</li>
-                                                <li><i class="fas fa-plus text-primary me-2"></i>Управление коллекциями
-                                                </li>
-                                                <li><i class="fas fa-plus text-primary me-2"></i>Синхронизация между
-                                                    устройствами</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="text-center mt-3">
-                                <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
-                                    <i class="fas fa-user-plus me-2"></i>
-                                    Зарегистрироваться бесплатно
-                                </a>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-
-
-                <!-- Вопрос 5 (упрощенный) -->
-                <div class="accordion-item shadow-sm mb-3 border-0 rounded-3">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-semibold fs-5" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
-                            <i class="fas fa-users me-3 text-primary"></i>
-                            Нужно ли регистрироваться для использования?
-                        </button>
-                    </h2>
-                    <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            <p>Базовые функции доступны без регистрации:</p>
-                            <ul>
-                                <li>генерация случайных палитр;</li>
-                                <li>извлечение палитр из изображений;</li>
-                                <li>копирование HEX-кодов.</li>
-                            </ul>
-                            <p class="mb-2">Регистрация нужна только для сохранения палитр и доступа к разделу <a
-                                    href="{{ url_for('myPalet') }}" class="text-decoration-none">"Мои палитры"</a>.</p>
-                            <a href="{{ url_for('register') }}" class="btn btn-primary btn-sm mt-1">
-                                <i class="fas fa-user-plus me-2"></i>
-                                Зарегистрироваться
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Вопрос 8 (упрощенный) -->
-                <div class="accordion-item shadow-sm mb-3 border-0 rounded-3">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed fw-semibold fs-5" type="button"
-                            data-bs-toggle="collapse" data-bs-target="#faq8" aria-expanded="false" aria-controls="faq8">
-                            <i class="fas fa-mobile-alt me-3 text-primary"></i>
-                            Есть ли мобильная версия?
-                        </button>
-                    </h2>
-                    <div id="faq8" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            <p>Да! Paleta полностью адаптивна и работает на всех устройствах:</p>
-                            <div class="row text-center">
-                                <div class="col-md-4 mb-3">
-                                    <div class="device-icon">
-                                        <i class="fas fa-desktop fa-3x text-primary mb-2"></i>
-                                        <h6>Компьютеры</h6>
-                                        <p class="small text-muted">Полнофункциональная версия</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="device-icon">
-                                        <i class="fas fa-tablet-alt fa-3x text-primary mb-2"></i>
-                                        <h6>Планшеты</h6>
-                                        <p class="small text-muted">Удобный интерфейс</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 mb-3">
-                                    <div class="device-icon">
-                                        <i class="fas fa-mobile-alt fa-3x text-primary mb-2"></i>
-                                        <h6>Смартфоны</h6>
-                                        <p class="small text-muted">Оптимизированный дизайн</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="mb-0">Вы можете использовать Paleta прямо из браузера вашего устройства без
-                                необходимости устанавливать приложение.</p>
+                            <p class="mb-0">{{ _('Да, интерфейс адаптирован для смартфонов, планшетов и компьютеров.') }}</p>
                         </div>
                     </div>
                 </div>

@@ -110,6 +110,16 @@ class Config:
     SMS_API_TIMEOUT = _get_env_int("SMS_API_TIMEOUT", 8)
     SMS_SENDER_NAME = os.environ.get("SMS_SENDER_NAME", "Paleta").strip()
 
+    SUPPORTED_LANGUAGES = ("ru", "en")
+    DEFAULT_LANGUAGE = os.environ.get("DEFAULT_LANGUAGE", "en").strip().lower() or "en"
+    LANG_COOKIE_NAME = os.environ.get("LANG_COOKIE_NAME", "site_lang").strip() or "site_lang"
+    LANG_COOKIE_MAX_AGE = _get_env_int("LANG_COOKIE_MAX_AGE", 31536000)
+    RU_COUNTRY_CODES = {
+        code.strip().upper()
+        for code in _get_env_list("RU_COUNTRY_CODES", default=["RU"])
+        if code.strip()
+    } or {"RU"}
+
     @staticmethod
     def allowed_file(filename: str) -> bool:
         return (

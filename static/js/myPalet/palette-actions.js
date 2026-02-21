@@ -1,5 +1,8 @@
 import { withCsrfHeaders } from '../security/csrf.js';
 
+const t = window.t || ((key, fallback) => fallback || key);
+const currentLang = window.currentLang || 'en';
+
 export function createPaletteActions({ state, showToast }) {
     function buildDownloadFilename(name, format) {
         const safeName = (name || '')
@@ -19,8 +22,7 @@ export function createPaletteActions({ state, showToast }) {
             body: JSON.stringify({ colors }),
         }).then(async response => {
             if (!response.ok) {
-                console.error('Не удалось экспортировать палитру, статус:', response.status);
-                showToast('Ошибка при экспорте', 'error');
+                showToast(t('export_error', 'Ошибка при экспорте'), 'error');
                 return;
             }
 
@@ -42,7 +44,7 @@ export function createPaletteActions({ state, showToast }) {
 
         const deleteModalText = document.getElementById('deleteModalText');
         if (deleteModalText) {
-            deleteModalText.textContent = `Вы уверены, что хотите удалить палитру "${name}"?`;
+            deleteModalText.textContent = `${t('delete_modal_prompt', 'Вы уверены, что хотите удалить палитру')} "${name}"?`;
         }
 
         const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
@@ -71,17 +73,17 @@ export function createPaletteActions({ state, showToast }) {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    showToast('Палитра удалена!');
+                    showToast(t('palette_deleted', 'Палитра удалена!'));
                     setTimeout(() => {
                         location.reload();
                     }, 500);
                 } else {
-                    showToast('Ошибка при удалении: ' + data.error, 'error');
+                    showToast(`${t('delete_error_prefix', 'Ошибка при удалении:')} ${data.error}`, 'error');
                 }
             })
             .catch(error => {
-                console.error('Ошибка при удалении палитры:', error);
-                showToast('Произошла ошибка при удалении', 'error');
+                console.error('Delete palette error:', error);
+                showToast(t('delete_error', 'Произошла ошибка при удалении'), 'error');
             });
     }
 
@@ -107,7 +109,7 @@ export function createPaletteActions({ state, showToast }) {
         const newName = (input?.value || '').trim();
 
         if (!newName) {
-            showToast('Название палитры не может быть пустым.', 'error');
+            showToast(t('rename_empty', 'Название палитры не может быть пустым.'), 'error');
             return;
         }
 
@@ -129,14 +131,14 @@ export function createPaletteActions({ state, showToast }) {
             .then(response => {
                 if (!response.ok) {
                     if (response.status === 401) {
-                        showToast('Сессия истекла. Пожалуйста, войдите снова.', 'error');
-                        window.location.href = '/login';
+                        showToast(t('session_expired_login', 'Сессия истекла. Пожалуйста, войдите снова.'), 'error');
+                        window.location.href = `/${currentLang}/login`;
                         return null;
                     }
                     return response.json().then(data => {
-                        throw new Error(data.error || 'Ошибка при переименовании палитры');
+                        throw new Error(data.error || t('rename_error', 'Ошибка при переименовании палитры'));
                     }).catch(() => {
-                        throw new Error('Ошибка при переименовании палитры');
+                        throw new Error(t('rename_error', 'Ошибка при переименовании палитры'));
                     });
                 }
                 return response.json();
@@ -145,7 +147,7 @@ export function createPaletteActions({ state, showToast }) {
                 if (!data) return;
 
                 if (data.success) {
-                    showToast('Название палитры обновлено!');
+                    showToast(t('rename_success', 'Название палитры обновлено!'));
                     const card = document.querySelector(`.palette-card[data-palette-id="${idToRename}"]`);
                     if (card) {
                         const titleEl = card.querySelector('.card-title');
@@ -164,12 +166,12 @@ export function createPaletteActions({ state, showToast }) {
                         }
                     }
                 } else {
-                    showToast(data.error || 'Ошибка при переименовании палитры', 'error');
+                    showToast(data.error || t('rename_error', 'Ошибка при переименовании палитры'), 'error');
                 }
             })
             .catch(error => {
-                console.error('Ошибка при переименовании палитры:', error);
-                showToast(error.message || 'Произошла ошибка при переименовании палитры', 'error');
+                console.error('Rename palette error:', error);
+                showToast(error.message || t('rename_unknown_error', 'Произошла ошибка при переименовании палитры'), 'error');
             });
     }
 

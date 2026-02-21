@@ -4,6 +4,8 @@ import { showToast } from './notifications.js';
 import { createPaletteActions } from './palette-actions.js';
 import { createMyPaletState } from './state.js';
 
+const t = window.t || ((key, fallback) => fallback || key);
+
 function collectMyPaletElements(root = document) {
     return {
         deleteModalElement: root.getElementById('deleteModal'),
@@ -67,11 +69,10 @@ export function initMyPaletPage() {
             const name = target.dataset.name;
 
             try {
-                console.log(`Экспорт ${name} в формате ${format}`, colors);
                 await actions.exportPalette(format, colors, name);
             } catch (error) {
-                console.error('Ошибка при экспорте палитры:', error);
-                showToast('Ошибка при экспорте', 'error');
+                console.error('My palettes export error:', error);
+                showToast(t('export_error', 'Ошибка при экспорте'), 'error');
             }
             return;
         }

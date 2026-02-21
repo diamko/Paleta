@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Личный кабинет
+    {{ _('Личный кабинет') }}
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
         <div class="col-lg-8">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="card-title mb-0">Личный кабинет</h3>
+                    <h3 class="card-title mb-0">{{ _('Личный кабинет') }}</h3>
                 </div>
                 <div class="card-body">
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -24,123 +24,67 @@
                         {% endif %}
                     {% endwith %}
 
-                    <h5 class="mb-3">Данные профиля</h5>
+                    <h5 class="mb-3">{{ _('Данные профиля') }}</h5>
                     <form method="POST" action="{{ url_for('profile_update') }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                         <div class="mb-3">
-                            <label for="username" class="form-label">Имя пользователя</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="username"
-                                name="username"
-                                value="{{ current_user.username }}"
-                                minlength="3"
-                                maxlength="80"
-                                required
-                            >
+                            <label for="username" class="form-label">{{ _('Имя пользователя') }}</label>
+                            <input type="text" class="form-control" id="username" name="username" value="{{ current_user.username }}" minlength="3" maxlength="80" required>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
-                            <input
-                                type="email"
-                                class="form-control"
-                                id="email"
-                                name="email"
-                                value="{{ profile_contact.email if profile_contact and profile_contact.email else '' }}"
-                                placeholder="you@example.com"
-                            >
+                            <input type="email" class="form-control" id="email" name="email" value="{{ profile_contact.email if profile_contact and profile_contact.email else '' }}" placeholder="you@example.com">
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Телефон</label>
-                            <input
-                                type="tel"
-                                class="form-control"
-                                id="phone"
-                                name="phone"
-                                value="{{ profile_contact.phone if profile_contact and profile_contact.phone else '' }}"
-                                placeholder="+79991234567"
-                            >
-                            <div class="form-text">
-                                Укажите минимум один контакт: email или телефон.
-                            </div>
+                            <label for="phone" class="form-label">{{ _('Телефон') }}</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" value="{{ profile_contact.phone if profile_contact and profile_contact.phone else '' }}" placeholder="+79991234567">
+                            <div class="form-text">{{ _('Укажите минимум один контакт: email или телефон.') }}</div>
                         </div>
                         <div class="mb-3">
-                            <label for="current_password" class="form-label">Текущий пароль (для подтверждения изменений)</label>
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="current_password"
-                                name="current_password"
-                                required
-                            >
+                            <label for="current_password" class="form-label">{{ _('Текущий пароль (для подтверждения изменений)') }}</label>
+                            <input type="password" class="form-control" id="current_password" name="current_password" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Сохранить профиль</button>
+                        <button type="submit" class="btn btn-primary">{{ _('Сохранить профиль') }}</button>
                     </form>
 
                     <hr class="my-4">
 
-                    <h5 class="mb-3">Смена пароля через код (email/телефон)</h5>
+                    <h5 class="mb-3">{{ _('Смена пароля через код (email/телефон)') }}</h5>
 
                     <form method="POST" action="{{ url_for('profile_send_password_code') }}" class="mb-3">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-                        <label for="send_channel" class="form-label">Куда отправить код</label>
+                        <label for="send_channel" class="form-label">{{ _('Куда отправить код') }}</label>
                         <div class="d-flex flex-wrap gap-2 align-items-center">
                             <select class="form-select w-auto" id="send_channel" name="channel" required>
                                 <option value="email">Email</option>
-                                <option value="phone">Телефон</option>
+                                <option value="phone">{{ _('Телефон') }}</option>
                             </select>
-                            <button type="submit" class="btn btn-outline-primary">Отправить код</button>
+                            <button type="submit" class="btn btn-outline-primary">{{ _('Отправить код') }}</button>
                         </div>
                     </form>
 
                     <form method="POST" action="{{ url_for('profile_change_password') }}">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                         <div class="mb-3">
-                            <label for="change_channel" class="form-label">Способ подтверждения</label>
+                            <label for="change_channel" class="form-label">{{ _('Способ подтверждения') }}</label>
                             <select class="form-select" id="change_channel" name="channel" required>
                                 <option value="email">Email</option>
-                                <option value="phone">Телефон</option>
+                                <option value="phone">{{ _('Телефон') }}</option>
                             </select>
                         </div>
                         <div class="mb-3">
-                            <label for="code" class="form-label">Код подтверждения</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="code"
-                                name="code"
-                                pattern="\d{6}"
-                                maxlength="6"
-                                required
-                                placeholder="123456"
-                            >
+                            <label for="code" class="form-label">{{ _('Код подтверждения') }}</label>
+                            <input type="text" class="form-control" id="code" name="code" pattern="\d{6}" maxlength="6" required placeholder="123456">
                         </div>
                         <div class="mb-3">
-                            <label for="new_password" class="form-label">Новый пароль</label>
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="new_password"
-                                name="new_password"
-                                minlength="10"
-                                maxlength="16"
-                                required
-                            >
+                            <label for="new_password" class="form-label">{{ _('Новый пароль') }}</label>
+                            <input type="password" class="form-control" id="new_password" name="new_password" minlength="10" maxlength="16" required>
                         </div>
                         <div class="mb-3">
-                            <label for="confirm_password" class="form-label">Повторите новый пароль</label>
-                            <input
-                                type="password"
-                                class="form-control"
-                                id="confirm_password"
-                                name="confirm_password"
-                                minlength="10"
-                                maxlength="16"
-                                required
-                            >
+                            <label for="confirm_password" class="form-label">{{ _('Повторите новый пароль') }}</label>
+                            <input type="password" class="form-control" id="confirm_password" name="confirm_password" minlength="10" maxlength="16" required>
                         </div>
-                        <button type="submit" class="btn btn-primary">Изменить пароль</button>
+                        <button type="submit" class="btn btn-primary">{{ _('Изменить пароль') }}</button>
                     </form>
                 </div>
             </div>

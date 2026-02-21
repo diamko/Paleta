@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Регистрация
+    {{ _('Регистрация') }}
 {% endblock %}
 
 {% block content %}
@@ -10,7 +10,7 @@
         <div class="col-md-6">
             <div class="card shadow">
                 <div class="card-header bg-primary text-white">
-                    <h3 class="card-title mb-0">Регистрация</h3>
+                    <h3 class="card-title mb-0">{{ _('Регистрация') }}</h3>
                 </div>
                 <div class="card-body">
                     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -23,25 +23,25 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-                    
+
                     <form method="POST" id="registerForm">
                         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                         <div class="mb-3">
-                            <label for="username" class="form-label">Имя пользователя</label>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="username" 
-                                name="username" 
+                            <label for="username" class="form-label">{{ _('Имя пользователя') }}</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                id="username"
+                                name="username"
                                 required
                                 minlength="3"
                                 maxlength="80"
-                                oninvalid="this.setCustomValidity('Имя пользователя: от 3 до 80 символов, без пробелов')"
+                                oninvalid="this.setCustomValidity('{{ _('Имя пользователя: от 3 до 80 символов, без пробелов') }}')"
                                 oninput="this.setCustomValidity('')"
                             >
                         </div>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email (для восстановления)</label>
+                            <label for="email" class="form-label">{{ _('Email (для восстановления)') }}</label>
                             <input
                                 type="email"
                                 class="form-control"
@@ -52,7 +52,7 @@
                             >
                         </div>
                         <div class="mb-3">
-                            <label for="phone" class="form-label">Телефон (для восстановления)</label>
+                            <label for="phone" class="form-label">{{ _('Телефон (для восстановления)') }}</label>
                             <input
                                 type="tel"
                                 class="form-control"
@@ -62,11 +62,11 @@
                                 oninput="this.setCustomValidity('')"
                             >
                             <div class="form-text">
-                                Укажите минимум один контакт: email или телефон.
+                                {{ _('Укажите минимум один контакт: email или телефон.') }}
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">Пароль</label>
+                            <label for="password" class="form-label">{{ _('Пароль') }}</label>
                             <input
                                 type="password"
                                 class="form-control"
@@ -75,19 +75,18 @@
                                 required
                                 minlength="10"
                                 maxlength="16"
-                                oninvalid="this.setCustomValidity('Пароль должен содержать от 10 до 16 символов')"
+                                oninvalid="this.setCustomValidity('{{ _('Пароль должен содержать от 10 до 16 символов') }}')"
                                 oninput="this.setCustomValidity('')"
                             >
                             <div class="form-text">
-                                От 10 до 16 символов, минимум одна заглавная буква, одна строчная,
-                                одна цифра и один спецсимвол.
+                                {{ _('От 10 до 16 символов, минимум одна заглавная буква, одна строчная, одна цифра и один спецсимвол.') }}
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+                        <button type="submit" class="btn btn-primary w-100">{{ _('Зарегистрироваться') }}</button>
                     </form>
-                    
+
                     <div class="text-center mt-3">
-                        <p>Уже есть аккаунт? <a href="{{ url_for('login') }}">Войти</a></p>
+                        <p>{{ _('Уже есть аккаунт?') }} <a href="{{ url_for('login') }}">{{ _('Войти') }}</a></p>
                     </div>
                 </div>
             </div>

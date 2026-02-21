@@ -1,0 +1,1062 @@
+# English translations for PROJECT.
+# Copyright (C) 2026 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2026-02-21 21:54+0300\n"
+"PO-Revision-Date: 2026-02-21 21:50+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.10.3\n"
+
+#: app.py:187
+msgid "HEX код скопирован!"
+msgstr "HEX code copied!"
+
+#: app.py:188
+msgid "Ошибка копирования:"
+msgstr "Copy error:"
+
+#: app.py:189
+msgid "Bootstrap не загружен!"
+msgstr "Bootstrap is not loaded!"
+
+#: app.py:190
+msgid "Bootstrap загружен успешно"
+msgstr "Bootstrap loaded successfully"
+
+#: app.py:191
+msgid "Сначала загрузите изображение!"
+msgstr "Upload an image first!"
+
+#: app.py:192
+msgid "Палитра пересчитана!"
+msgstr "Palette recalculated!"
+
+#: app.py:193
+msgid "Ошибка при пересчете палитры"
+msgstr "Palette recalculation error"
+
+#: app.py:194
+msgid "Произошла ошибка при пересчете"
+msgstr "An error occurred during recalculation"
+
+#: app.py:195
+msgid "Сначала создайте палитру!"
+msgstr "Create a palette first!"
+
+#: app.py:196
+msgid "Название палитры не может состоять только из пробелов"
+msgstr "Palette name cannot contain only spaces"
+
+#: app.py:197
+msgid "Сессия истекла. Пожалуйста, войдите снова."
+msgstr "Session expired. Please sign in again."
+
+#: app.py:198
+msgid "Ошибка при сохранении"
+msgstr "Save error"
+
+#: app.py:199
+msgid "Палитра сохранена!"
+msgstr "Palette saved!"
+
+#: app.py:200
+msgid "Ошибка при сохранении палитры"
+msgstr "Error while saving the palette"
+
+#: app.py:201
+msgid "Ошибка при экспорте"
+msgstr "Export error"
+
+#: app.py:202
+msgid "Введите корректный HEX-код, например #A1B2C3"
+msgstr "Enter a valid HEX code, e.g. #A1B2C3"
+
+#: app.py:203
+msgid "Готово для новой загрузки!"
+msgstr "Ready for a new upload!"
+
+#: app.py:204
+msgid "Пожалуйста, выберите изображение"
+msgstr "Please select an image"
+
+#: app.py:205
+msgid "Файл слишком большой. Максимальный размер: 16 МБ"
+msgstr "File is too large. Maximum size: 16 MB"
+
+#: app.py:206
+msgid "Ошибка загрузки изображения"
+msgstr "Image upload error"
+
+#: app.py:207
+msgid "Ошибка при анализе изображения"
+msgstr "Image analysis error"
+
+#: app.py:208
+msgid "Произошла ошибка при загрузке файла"
+msgstr "An error occurred during file upload"
+
+#: app.py:209
+msgid "Не удалось загрузить сохранённое изображение"
+msgstr "Failed to load saved image"
+
+#: app.py:210
+msgid "Произошла ошибка при использовании сохранённого изображения"
+msgstr "An error occurred while using the saved image"
+
+#: app.py:211 templates/index.html:118
+msgid "Использовать"
+msgstr "Use"
+
+#: app.py:212 templates/index.html:109
+msgid "Недавнее изображение"
+msgstr "Recent image"
+
+#: app.py:213
+msgid "Палитра удалена!"
+msgstr "Palette deleted!"
+
+#: app.py:214
+msgid "Ошибка при удалении:"
+msgstr "Delete error:"
+
+#: app.py:215
+msgid "Произошла ошибка при удалении"
+msgstr "An error occurred while deleting"
+
+#: app.py:216
+msgid "Вы уверены, что хотите удалить палитру"
+msgstr "Are you sure you want to delete the palette"
+
+#: app.py:217
+msgid "Название палитры не может быть пустым."
+msgstr "Palette name cannot be empty."
+
+#: app.py:218
+msgid "Название палитры обновлено!"
+msgstr "Palette name updated!"
+
+#: app.py:219
+msgid "Ошибка при переименовании палитры"
+msgstr "Palette rename error"
+
+#: app.py:220
+msgid "Произошла ошибка при переименовании палитры"
+msgstr "An error occurred while renaming the palette"
+
+#: app.py:221
+msgid "Цвета скопированы в буфер обмена!"
+msgstr "Colors copied to clipboard!"
+
+#: app.py:222
+msgid "Сначала сгенерируйте палитру!"
+msgstr "Generate a palette first!"
+
+#: app.py:223 routes/api.py:188 templates/base.html:98
+msgid "Моя палитра"
+msgstr "My Palette"
+
+#: app.py:224
+msgid "Скопировать HEX"
+msgstr "Copy HEX"
+
+#: app.py:225
+#, python-format
+msgid "Выбор цвета %(index)s"
+msgstr "Color %(index)s picker"
+
+#: app.py:226
+#, python-format
+msgid "HEX цвета %(index)s"
+msgstr "HEX color %(index)s"
+
+#: app.py:227
+#, python-format
+msgid "Маркер цвета %(index)s"
+msgstr "Color marker %(index)s"
+
+#: app.py:248
+msgid "Недействительный CSRF-токен. Обновите страницу и повторите попытку."
+msgstr "Invalid CSRF token. Refresh the page and try again."
+
+#: app.py:254
+msgid "Сессия формы истекла. Обновите страницу и попробуйте снова."
+msgstr "Form session expired. Refresh the page and try again."
+
+#: routes/api.py:58 routes/api.py:67
+msgid "Файл не является корректным изображением"
+msgstr "The file is not a valid image"
+
+#: routes/api.py:72
+msgid "Недопустимый формат изображения"
+msgstr "Unsupported image format"
+
+#: routes/api.py:75
+msgid "Изображение слишком большое по разрешению"
+msgstr "Image resolution is too large"
+
+#: routes/api.py:107
+msgid "Слишком много загрузок. Попробуйте позже."
+msgstr "Too many uploads. Please try again later."
+
+#: routes/api.py:110
+msgid "Файл не был загружен"
+msgstr "No file was uploaded"
+
+#: routes/api.py:115
+msgid "Файл не выбран"
+msgstr "No file selected"
+
+#: routes/api.py:118
+msgid "Недопустимый тип файла"
+msgstr "Unsupported file type"
+
+#: routes/api.py:136
+msgid "Не удалось извлечь цвета из изображения"
+msgstr "Failed to extract colors from image"
+
+#: routes/api.py:160 routes/api.py:239 routes/api.py:290 routes/api.py:319
+#: routes/api.py:366
+msgid "Внутренняя ошибка сервера"
+msgstr "Internal server error"
+
+#: routes/api.py:167 routes/api.py:247 routes/api.py:297 routes/auth.py:488
+msgid "Слишком много запросов. Попробуйте позже."
+msgstr "Too many requests. Please try again later."
+
+#: routes/api.py:174
+msgid "Палитра должна содержать корректные HEX-цвета"
+msgstr "Palette must contain valid HEX colors"
+
+#: routes/api.py:182
+msgid "Название палитры не может быть пустым или состоять только из пробелов"
+msgstr "Palette name cannot be empty or contain only spaces"
+
+#: routes/api.py:191
+msgid "Без названия"
+msgstr "Untitled"
+
+#: routes/api.py:225 routes/api.py:281
+msgid "У вас уже есть палитра с таким названием"
+msgstr "You already have a palette with this name"
+
+#: routes/api.py:257
+msgid "Название палитры не может быть пустым"
+msgstr "Palette name cannot be empty"
+
+#: routes/api.py:270
+msgid "У вас нет прав на изменение этой палитры"
+msgstr "You do not have permission to edit this palette"
+
+#: routes/api.py:306
+msgid "У вас нет прав на удаление этой палитры"
+msgstr "You do not have permission to delete this palette"
+
+#: routes/api.py:325
+msgid "Слишком много экспортов. Попробуйте позже."
+msgstr "Too many exports. Please try again later."
+
+#: routes/api.py:333
+msgid "Не переданы корректные цвета палитры"
+msgstr "No valid palette colors were provided"
+
+#: routes/api.py:341
+msgid "Экспорт PNG пока не реализован"
+msgstr "PNG export is not implemented yet"
+
+#: routes/api.py:344
+msgid "Неподдерживаемый формат экспорта"
+msgstr "Unsupported export format"
+
+#: routes/auth.py:42
+msgid "Пароль должен содержать от 10 до 16 символов."
+msgstr "Password must contain 10 to 16 characters."
+
+#: routes/auth.py:44
+msgid "Пароль не должен содержать пробелы."
+msgstr "Password must not contain spaces."
+
+#: routes/auth.py:46
+msgid "Пароль должен содержать хотя бы одну заглавную букву."
+msgstr "Password must contain at least one uppercase letter."
+
+#: routes/auth.py:48
+msgid "Пароль должен содержать хотя бы одну строчную букву."
+msgstr "Password must contain at least one lowercase letter."
+
+#: routes/auth.py:50
+msgid "Пароль должен содержать хотя бы одну цифру."
+msgstr "Password must contain at least one digit."
+
+#: routes/auth.py:52
+msgid "Пароль должен содержать хотя бы один спецсимвол."
+msgstr "Password must contain at least one special character."
+
+#: routes/auth.py:54
+msgid "Пароль не должен содержать имя пользователя."
+msgstr "Password must not contain the username."
+
+#: routes/auth.py:76
+msgid "Имя пользователя обязательно."
+msgstr "Username is required."
+
+#: routes/auth.py:78
+msgid "Имя пользователя должно содержать минимум 3 символа."
+msgstr "Username must contain at least 3 characters."
+
+#: routes/auth.py:80
+msgid "Имя пользователя не должно превышать 80 символов."
+msgstr "Username must not exceed 80 characters."
+
+#: routes/auth.py:82
+msgid "Имя пользователя не должно содержать пробелы."
+msgstr "Username must not contain spaces."
+
+#: routes/auth.py:155
+msgid "Слишком много попыток регистрации. Попробуйте через несколько минут."
+msgstr "Too many registration attempts. Try again in a few minutes."
+
+#: routes/auth.py:166
+msgid "Пожалуйста, заполните все поля"
+msgstr "Please fill in all fields"
+
+#: routes/auth.py:175
+msgid "Укажите email или номер телефона для восстановления пароля."
+msgstr "Provide an email or phone number for password recovery."
+
+#: routes/auth.py:179 routes/auth.py:295 routes/auth.py:501 routes/auth.py:551
+msgid "Введите корректный email."
+msgstr "Enter a valid email."
+
+#: routes/auth.py:183 routes/auth.py:299 routes/auth.py:503 routes/auth.py:553
+msgid "Введите корректный номер телефона (от 10 до 15 цифр)."
+msgstr "Enter a valid phone number (10 to 15 digits)."
+
+#: routes/auth.py:192
+msgid "Пользователь с таким именем уже существует"
+msgstr "A user with this name already exists"
+
+#: routes/auth.py:196 routes/auth.py:316
+msgid "Этот email уже используется другим аккаунтом."
+msgstr "This email is already used by another account."
+
+#: routes/auth.py:200 routes/auth.py:325
+msgid "Этот номер телефона уже используется другим аккаунтом."
+msgstr "This phone number is already used by another account."
+
+#: routes/auth.py:209
+msgid "Регистрация успешна! Теперь войдите в систему"
+msgstr "Registration successful! Now sign in."
+
+#: routes/auth.py:225
+msgid "Слишком много попыток входа. Попробуйте позже."
+msgstr "Too many sign-in attempts. Try again later."
+
+#: routes/auth.py:235
+msgid "Слишком много попыток входа для этого пользователя. Попробуйте позже."
+msgstr "Too many sign-in attempts for this user. Try again later."
+
+#: routes/auth.py:241
+msgid "Вход выполнен успешно"
+msgstr "Signed in successfully"
+
+#: routes/auth.py:249
+msgid "Неверное имя пользователя или пароль"
+msgstr "Invalid username or password"
+
+#: routes/auth.py:270
+msgid "Слишком много попыток изменения профиля. Попробуйте позже."
+msgstr "Too many profile update attempts. Try again later."
+
+#: routes/auth.py:279
+msgid "Для изменения профиля укажите текущий пароль."
+msgstr "Enter your current password to update the profile."
+
+#: routes/auth.py:291
+msgid "Укажите хотя бы один контакт: email или телефон."
+msgstr "Provide at least one contact: email or phone."
+
+#: routes/auth.py:307
+msgid "Это имя пользователя уже занято."
+msgstr "This username is already taken."
+
+#: routes/auth.py:335
+msgid "Профиль обновлён."
+msgstr "Profile updated."
+
+#: routes/auth.py:351
+msgid "Слишком много запросов на отправку кода. Попробуйте позже."
+msgstr "Too many code send requests. Try again later."
+
+#: routes/auth.py:356
+msgid "Выберите корректный способ подтверждения: email или телефон."
+msgstr "Choose a valid verification method: email or phone."
+
+#: routes/auth.py:361
+msgid "Сначала добавьте email или телефон в личном кабинете."
+msgstr "First add an email or phone number in your profile."
+
+#: routes/auth.py:367
+msgid "Для этого аккаунта не задан email."
+msgstr "No email is set for this account."
+
+#: routes/auth.py:369
+msgid "Для этого аккаунта не задан номер телефона."
+msgstr "No phone number is set for this account."
+
+#: routes/auth.py:378 routes/auth.py:512
+msgid "Слишком много запросов для этого контакта. Попробуйте позже."
+msgstr "Too many requests for this contact. Try again later."
+
+#: routes/auth.py:383
+msgid "Код подтверждения отправлен."
+msgstr "Verification code sent."
+
+#: routes/auth.py:385
+msgid "Не удалось отправить код. Проверьте настройки SMTP/SMS."
+msgstr "Failed to send code. Check SMTP/SMS settings."
+
+#: routes/auth.py:387
+#, python-format
+msgid "Dev-код: %(code)s"
+msgstr "Dev code: %(code)s"
+
+#: routes/auth.py:404
+msgid "Слишком много попыток смены пароля. Попробуйте позже."
+msgstr "Too many password change attempts. Try again later."
+
+#: routes/auth.py:413
+msgid "Выберите корректный способ подтверждения."
+msgstr "Choose a valid verification method."
+
+#: routes/auth.py:417
+msgid "Код должен состоять из 6 цифр."
+msgstr "Code must be 6 digits."
+
+#: routes/auth.py:421 routes/auth.py:561
+msgid "Пароли не совпадают."
+msgstr "Passwords do not match."
+
+#: routes/auth.py:429
+msgid "Сначала укажите выбранный контакт в личном кабинете."
+msgstr "First set the selected contact in your profile."
+
+#: routes/auth.py:438 routes/auth.py:575
+msgid "Слишком много попыток для этого контакта. Попробуйте позже."
+msgstr "Too many attempts for this contact. Try again later."
+
+#: routes/auth.py:443
+msgid "Код не найден или истек. Запросите новый."
+msgstr "Code not found or expired. Request a new one."
+
+#: routes/auth.py:448 routes/auth.py:586
+msgid "Превышено число попыток. Запросите новый код."
+msgstr "Too many attempts. Request a new code."
+
+#: routes/auth.py:454
+msgid "Неверный код подтверждения."
+msgstr "Invalid verification code."
+
+#: routes/auth.py:463 routes/auth.py:601
+msgid "Новый пароль должен отличаться от текущего."
+msgstr "New password must differ from the current one."
+
+#: routes/auth.py:477
+msgid "Пароль успешно изменен."
+msgstr "Password changed successfully."
+
+#: routes/auth.py:495
+msgid "Выберите способ восстановления: email или телефон."
+msgstr "Choose a recovery method: email or phone."
+
+#: routes/auth.py:519
+#, python-format
+msgid "Dev-код восстановления: %(code)s"
+msgstr "Dev recovery code: %(code)s"
+
+#: routes/auth.py:522
+msgid "Если контакт найден, код восстановления отправлен."
+msgstr "If the contact exists, a recovery code has been sent."
+
+#: routes/auth.py:535
+msgid "Слишком много попыток сброса пароля. Попробуйте позже."
+msgstr "Too many password reset attempts. Try again later."
+
+#: routes/auth.py:545
+msgid "Выберите корректный способ восстановления."
+msgstr "Choose a valid recovery method."
+
+#: routes/auth.py:557
+msgid "Код восстановления должен состоять из 6 цифр."
+msgstr "Recovery code must be 6 digits."
+
+#: routes/auth.py:566
+msgid "Неверный код или контакт. Проверьте данные."
+msgstr "Invalid code or contact. Check your data."
+
+#: routes/auth.py:581
+msgid "Код не найден или истек. Запросите новый код."
+msgstr "Code not found or expired. Request a new code."
+
+#: routes/auth.py:592
+msgid "Неверный код восстановления."
+msgstr "Invalid recovery code."
+
+#: routes/auth.py:615
+msgid "Пароль обновлен. Теперь вы можете войти с новым паролем."
+msgstr "Password updated. You can now sign in with the new password."
+
+#: routes/auth.py:637
+msgid "Вы вышли из системы"
+msgstr "You have signed out"
+
+#: templates/base.html:25
+msgid "Логотип"
+msgstr "Logo"
+
+#: templates/base.html:31
+msgid "Главная"
+msgstr "Home"
+
+#: templates/base.html:32
+msgid "Генерация палитры"
+msgstr "Palette Generation"
+
+#: templates/base.html:33 templates/myPalet.html:4 templates/myPalet.html:11
+msgid "Мои палитры"
+msgstr "My Palettes"
+
+#: templates/base.html:38
+msgid "Переключение языка"
+msgstr "Language switch"
+
+#: templates/base.html:47
+msgid "Привет,"
+msgstr "Hi,"
+
+#: templates/base.html:54
+msgid "Выйти"
+msgstr "Sign out"
+
+#: templates/base.html:57 templates/login.html:56 templates/register.html:89
+msgid "Войти"
+msgstr "Sign in"
+
+#: templates/base.html:58 templates/login.html:61 templates/register.html:85
+msgid "Зарегистрироваться"
+msgstr "Register"
+
+#: templates/base.html:72
+msgid "© 2026 Paleta. Все права защищены."
+msgstr "© 2026 Paleta. All rights reserved."
+
+#: templates/base.html:91 templates/generatePalet.html:32
+#: templates/index.html:74
+msgid "Сохранить палитру"
+msgstr "Save Palette"
+
+#: templates/base.html:92 templates/myPalet.html:117 templates/myPalet.html:135
+msgid "Закрыть"
+msgstr "Close"
+
+#: templates/base.html:97
+msgid "Название палитры"
+msgstr "Palette Name"
+
+#: templates/base.html:102 templates/myPalet.html:123
+#: templates/myPalet.html:147
+msgid "Отмена"
+msgstr "Cancel"
+
+#: templates/base.html:103 templates/myPalet.html:148
+msgid "Сохранить"
+msgstr "Save"
+
+#: templates/faq.html:4
+msgid "FAQ - Часто задаваемые вопросы"
+msgstr "FAQ - Frequently Asked Questions"
+
+#: templates/faq.html:11
+msgid "Часто задаваемые вопросы"
+msgstr "Frequently Asked Questions"
+
+#: templates/faq.html:12
+msgid "Найдите ответы на популярные вопросы о работе с генератором палитр"
+msgstr "Find answers to common questions about the palette generator."
+
+#: templates/faq.html:22
+msgid "Как извлечь палитру из изображения?"
+msgstr "How do I extract a palette from an image?"
+
+#: templates/faq.html:28
+msgid "Откройте главную страницу и загрузите изображение."
+msgstr "Open the home page and upload an image."
+
+#: templates/faq.html:29
+msgid "Выберите количество цветов и дождитесь анализа."
+msgstr "Choose the number of colors and wait for analysis."
+
+#: templates/faq.html:30
+msgid "Скопируйте, экспортируйте или сохраните палитру."
+msgstr "Copy, export, or save the palette."
+
+#: templates/faq.html:39
+msgid "Нужно ли регистрироваться?"
+msgstr "Do I need to register?"
+
+#: templates/faq.html:44
+msgid "Регистрация не обязательна для генерации и экспорта палитр."
+msgstr "Registration is not required for palette generation and export."
+
+#: templates/faq.html:45
+msgid "Аккаунт нужен для сохранения палитр и доступа к разделу \"Мои палитры\"."
+msgstr "An account is required to save palettes and access \"My Palettes\"."
+
+#: templates/faq.html:53
+msgid "Какие форматы экспорта поддерживаются?"
+msgstr "Which export formats are supported?"
+
+#: templates/faq.html:58
+msgid "Поддерживаются форматы JSON, GPL, ASE, CSV и ACO."
+msgstr "Supported formats are JSON, GPL, ASE, CSV, and ACO."
+
+#: templates/faq.html:66
+msgid "Как восстановить пароль?"
+msgstr "How do I recover my password?"
+
+#: templates/faq.html:71
+msgid "На странице входа нажмите \"Забыли пароль?\" и выберите email или телефон."
+msgstr "On the sign-in page, click \"Forgot password?\" and choose email or phone."
+
+#: templates/faq.html:72
+msgid ""
+"После получения кода введите его на странице сброса и задайте новый "
+"пароль."
+msgstr ""
+"After receiving the code, enter it on the reset page and set a new "
+"password."
+
+#: templates/faq.html:80
+msgid "Есть ли мобильная версия?"
+msgstr "Is there a mobile version?"
+
+#: templates/faq.html:85
+msgid "Да, интерфейс адаптирован для смартфонов, планшетов и компьютеров."
+msgstr "Yes, the interface is optimized for smartphones, tablets, and desktops."
+
+#: templates/forgot_password.html:4
+msgid "Восстановление пароля"
+msgstr "Password Recovery"
+
+#: templates/forgot_password.html:13
+msgid "Запрос кода восстановления"
+msgstr "Request Recovery Code"
+
+#: templates/forgot_password.html:30 templates/reset_password.html:30
+msgid "Способ восстановления"
+msgstr "Recovery Method"
+
+#: templates/forgot_password.html:33 templates/profile.html:39
+#: templates/profile.html:60 templates/profile.html:72
+#: templates/reset_password.html:33
+msgid "Телефон"
+msgstr "Phone"
+
+#: templates/forgot_password.html:37 templates/reset_password.html:37
+msgid "Email или номер телефона"
+msgstr "Email or Phone Number"
+
+#: templates/forgot_password.html:44 templates/generatePalet.html:34
+#: templates/index.html:76 templates/reset_password.html:45
+msgid "или"
+msgstr "or"
+
+#: templates/forgot_password.html:45 templates/reset_password.html:46
+msgid "Введите email или номер телефона"
+msgstr "Enter email or phone number"
+
+#: templates/forgot_password.html:49 templates/profile.html:62
+msgid "Отправить код"
+msgstr "Send Code"
+
+#: templates/forgot_password.html:53
+msgid "Уже есть код?"
+msgstr "Already have a code?"
+
+#: templates/forgot_password.html:53
+msgid "Сбросить пароль"
+msgstr "Reset Password"
+
+#: templates/forgot_password.html:54 templates/reset_password.html:98
+msgid "Вернуться ко входу"
+msgstr "Back to Sign In"
+
+#: templates/generatePalet.html:4 templates/generatePalet.html:11
+msgid "Генерация случайной палитры"
+msgstr "Random Palette Generation"
+
+#: templates/generatePalet.html:12
+msgid "Создайте уникальную цветовую палитру с помощью генератора случайных цветов"
+msgstr "Create a unique color palette with the random color generator."
+
+#: templates/generatePalet.html:15 templates/index.html:60
+msgid "Количество цветов:"
+msgstr "Number of Colors:"
+
+#: templates/generatePalet.html:21
+msgid "Сгенерировать палитру"
+msgstr "Generate Palette"
+
+#: templates/generatePalet.html:26 templates/index.html:54
+msgid ""
+"Меняйте цвет через палитру или HEX-поле. Нажмите на цвет, чтобы "
+"скопировать HEX."
+msgstr "Adjust colors using the picker or HEX field. Click a color to copy HEX."
+
+#: templates/generatePalet.html:30 templates/index.html:71
+msgid "Действия"
+msgstr "Actions"
+
+#: templates/generatePalet.html:34 templates/index.html:76
+msgid "Чтобы сохранить палитру,"
+msgstr "To save a palette,"
+
+#: templates/generatePalet.html:34 templates/index.html:76
+msgid "войдите"
+msgstr "sign in"
+
+#: templates/generatePalet.html:34 templates/index.html:76
+msgid "зарегистрируйтесь"
+msgstr "register"
+
+#: templates/generatePalet.html:37 templates/index.html:79
+msgid "Экспорт JSON"
+msgstr "Export JSON"
+
+#: templates/generatePalet.html:38 templates/index.html:80
+msgid "Экспорт GPL"
+msgstr "Export GPL"
+
+#: templates/generatePalet.html:39 templates/index.html:81
+msgid "Экспорт ASE"
+msgstr "Export ASE"
+
+#: templates/generatePalet.html:40 templates/index.html:82
+msgid "Экспорт CSV"
+msgstr "Export CSV"
+
+#: templates/generatePalet.html:41 templates/index.html:83
+msgid "Экспорт ACO"
+msgstr "Export ACO"
+
+#: templates/index.html:11
+msgid "Создание цветовой палитры"
+msgstr "Create a Color Palette"
+
+#: templates/index.html:12
+msgid "Загрузите изображение, и мы извлечем из него уникальную цветовую палитру"
+msgstr "Upload an image and we will extract a unique color palette from it."
+
+#: templates/index.html:16
+msgid "Перетащите изображение сюда или нажмите для выбора"
+msgstr "Drag an image here or click to choose one"
+
+#: templates/index.html:17
+msgid "Поддерживаемые форматы: PNG, JPG, JPEG, WebP (макс. 16MB)"
+msgstr "Supported formats: PNG, JPG, JPEG, WebP (max 16MB)"
+
+#: templates/index.html:18
+msgid "Выбрать файл"
+msgstr "Choose File"
+
+#: templates/index.html:29
+msgid "Загрузка..."
+msgstr "Loading..."
+
+#: templates/index.html:31
+msgid "Анализируем изображение..."
+msgstr "Analyzing image..."
+
+#: templates/index.html:37
+msgid "Изображение"
+msgstr "Image"
+
+#: templates/index.html:39
+msgid "Загруженное изображение"
+msgstr "Uploaded image"
+
+#: templates/index.html:47
+msgid ""
+"Перетаскивайте маркеры-пипетки по изображению: каждый маркер управляет "
+"своим цветом палитры."
+msgstr ""
+"Drag eyedropper markers over the image: each marker controls its palette "
+"color."
+
+#: templates/index.html:51
+msgid "Цветовая палитра"
+msgstr "Color Palette"
+
+#: templates/index.html:66
+msgid "Пересчитать"
+msgstr "Recalculate"
+
+#: templates/index.html:67
+msgid "Загрузить новое"
+msgstr "Upload New"
+
+#: templates/index.html:95
+msgid "Недавние изображения (за 7 дней)"
+msgstr "Recent Images (Last 7 Days)"
+
+#: templates/index.html:96
+msgid ""
+"Выберите одно из изображений, чтобы снова сгенерировать палитру на его "
+"основе."
+msgstr "Choose one image to regenerate a palette from it."
+
+#: templates/index.html:99
+msgid "Пока у вас нет недавних загрузок."
+msgstr "You do not have recent uploads yet."
+
+#: templates/login.html:4
+msgid "Вход"
+msgstr "Sign In"
+
+#: templates/login.html:13
+msgid "Вход в систему"
+msgstr "Sign In"
+
+#: templates/login.html:33 templates/profile.html:31 templates/register.html:30
+msgid "Имя пользователя"
+msgstr "Username"
+
+#: templates/login.html:40
+msgid "Пожалуйста, заполните поле имени пользователя"
+msgstr "Please fill in the username field"
+
+#: templates/login.html:45 templates/register.html:69
+msgid "Пароль"
+msgstr "Password"
+
+#: templates/login.html:52
+msgid "Пожалуйста, заполните поле пароля"
+msgstr "Please fill in the password field"
+
+#: templates/login.html:60
+msgid "Забыли пароль?"
+msgstr "Forgot password?"
+
+#: templates/login.html:61
+msgid "Нет аккаунта?"
+msgstr "Don't have an account?"
+
+#: templates/myPalet.html:16
+msgid "Поиск по названию палитры"
+msgstr "Search by palette name"
+
+#: templates/myPalet.html:19
+msgid "Все количества цветов"
+msgstr "All color counts"
+
+#: templates/myPalet.html:21
+#, python-format
+msgid "Только %(count)s цветов"
+msgstr "Only %(count)s colors"
+
+#: templates/myPalet.html:25
+msgid "По дате: новые сначала"
+msgstr "By date: newest first"
+
+#: templates/myPalet.html:26
+msgid "По дате: старые сначала"
+msgstr "By date: oldest first"
+
+#: templates/myPalet.html:27
+msgid "По названию: А-Я"
+msgstr "By name: A-Z"
+
+#: templates/myPalet.html:28
+msgid "По названию: Я-А"
+msgstr "By name: Z-A"
+
+#: templates/myPalet.html:29
+msgid "По количеству цветов: меньше-больше"
+msgstr "By color count: low-high"
+
+#: templates/myPalet.html:30
+msgid "По количеству цветов: больше-меньше"
+msgstr "By color count: high-low"
+
+#: templates/myPalet.html:33
+msgid "Показано палитр:"
+msgstr "Shown palettes:"
+
+#: templates/myPalet.html:62
+msgid "Создано:"
+msgstr "Created:"
+
+#: templates/myPalet.html:65
+msgid "Копировать"
+msgstr "Copy"
+
+#: templates/myPalet.html:69
+msgid "Экспорт"
+msgstr "Export"
+
+#: templates/myPalet.html:88
+msgid "Переименовать"
+msgstr "Rename"
+
+#: templates/myPalet.html:92 templates/myPalet.html:124
+msgid "Удалить"
+msgstr "Delete"
+
+#: templates/myPalet.html:103
+msgid "У вас пока нет сохраненных палитр"
+msgstr "You have no saved palettes yet"
+
+#: templates/myPalet.html:104
+msgid "Создайте и сохраните свою первую палитру!"
+msgstr "Create and save your first palette!"
+
+#: templates/myPalet.html:105
+msgid "Создать палитру"
+msgstr "Create Palette"
+
+#: templates/myPalet.html:116
+msgid "Подтверждение удаления"
+msgstr "Delete Confirmation"
+
+#: templates/myPalet.html:120
+msgid "Вы уверены, что хотите удалить эту палитру?"
+msgstr "Are you sure you want to delete this palette?"
+
+#: templates/myPalet.html:134
+msgid "Переименовать палитру"
+msgstr "Rename Palette"
+
+#: templates/myPalet.html:139
+msgid "Новое название палитры"
+msgstr "New palette name"
+
+#: templates/myPalet.html:142
+msgid "Название должно быть уникальным среди ваших палитр."
+msgstr "The name must be unique among your palettes."
+
+#: templates/profile.html:4 templates/profile.html:13
+msgid "Личный кабинет"
+msgstr "Profile"
+
+#: templates/profile.html:27
+msgid "Данные профиля"
+msgstr "Profile Data"
+
+#: templates/profile.html:41 templates/register.html:65
+msgid "Укажите минимум один контакт: email или телефон."
+msgstr "Provide at least one contact: email or phone."
+
+#: templates/profile.html:44
+msgid "Текущий пароль (для подтверждения изменений)"
+msgstr "Current password (to confirm changes)"
+
+#: templates/profile.html:47
+msgid "Сохранить профиль"
+msgstr "Save Profile"
+
+#: templates/profile.html:52
+msgid "Смена пароля через код (email/телефон)"
+msgstr "Change password via code (email/phone)"
+
+#: templates/profile.html:56
+msgid "Куда отправить код"
+msgstr "Where to send the code"
+
+#: templates/profile.html:69
+msgid "Способ подтверждения"
+msgstr "Verification Method"
+
+#: templates/profile.html:76
+msgid "Код подтверждения"
+msgstr "Verification Code"
+
+#: templates/profile.html:80 templates/reset_password.html:66
+msgid "Новый пароль"
+msgstr "New Password"
+
+#: templates/profile.html:84 templates/reset_password.html:89
+msgid "Повторите новый пароль"
+msgstr "Repeat new password"
+
+#: templates/profile.html:87
+msgid "Изменить пароль"
+msgstr "Change Password"
+
+#: templates/register.html:4 templates/register.html:13
+msgid "Регистрация"
+msgstr "Register"
+
+#: templates/register.html:39
+msgid "Имя пользователя: от 3 до 80 символов, без пробелов"
+msgstr "Username: 3 to 80 characters, no spaces"
+
+#: templates/register.html:44
+msgid "Email (для восстановления)"
+msgstr "Email (for recovery)"
+
+#: templates/register.html:55
+msgid "Телефон (для восстановления)"
+msgstr "Phone (for recovery)"
+
+#: templates/register.html:78 templates/reset_password.html:75
+msgid "Пароль должен содержать от 10 до 16 символов"
+msgstr "Password must contain 10 to 16 characters"
+
+#: templates/register.html:82
+msgid ""
+"От 10 до 16 символов, минимум одна заглавная буква, одна строчная, одна "
+"цифра и один спецсимвол."
+msgstr ""
+"10 to 16 characters, at least one uppercase, one lowercase, one digit, "
+"and one special character."
+
+#: templates/register.html:89
+msgid "Уже есть аккаунт?"
+msgstr "Already have an account?"
+
+#: templates/reset_password.html:4 templates/reset_password.html:13
+msgid "Сброс пароля"
+msgstr "Password Reset"
+
+#: templates/reset_password.html:51
+msgid "Код из письма/SMS"
+msgstr "Code from Email/SMS"
+
+#: templates/reset_password.html:61
+msgid "Введите 6-значный код"
+msgstr "Enter a 6-digit code"
+
+#: templates/reset_password.html:80
+msgid "Повторите пароль"
+msgstr "Repeat password"
+
+#: templates/reset_password.html:93
+msgid "Обновить пароль"
+msgstr "Update Password"
+
+#: templates/reset_password.html:97
+msgid "Запросить новый код"
+msgstr "Request a new code"
+
+#~ msgid "Пожалуйста, войдите, чтобы получить доступ к этой странице."
+#~ msgstr "Please log in to access this page."

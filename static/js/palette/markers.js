@@ -1,5 +1,13 @@
 import { clamp, hexToRgb, rgbToHex } from './utils.js';
 
+const t = window.t || ((key, fallback, params = {}) => {
+    let text = fallback || key;
+    Object.keys(params).forEach((paramKey) => {
+        text = text.replace(`{${paramKey}}`, String(params[paramKey]));
+    });
+    return text;
+});
+
 export function createMarkerController({ elements, state }) {
     const sampleCanvas = document.createElement('canvas');
     const sampleCtx = sampleCanvas.getContext('2d', { willReadFrequently: true });
@@ -347,7 +355,10 @@ export function createMarkerController({ elements, state }) {
             markerButton.style.left = `${position.x * 100}%`;
             markerButton.style.top = `${position.y * 100}%`;
             markerButton.style.backgroundColor = state.currentColors[index] || '#000000';
-            markerButton.setAttribute('aria-label', `Маркер цвета ${index + 1}`);
+            markerButton.setAttribute(
+                'aria-label',
+                t('color_marker_label', 'Маркер цвета {index}', { index: index + 1 })
+            );
 
             markerButton.addEventListener('pointerdown', (event) => {
                 if (event.button !== 0) return;

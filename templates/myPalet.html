@@ -1,46 +1,36 @@
 {% extends 'base.html' %}
 
 {% block title %}
-Мои палитры
+{{ _('Мои палитры') }}
 {% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <div class="row mb-4">
         <div class="col-12 d-flex flex-wrap align-items-center justify-content-between gap-2">
-            <h1 class="gradient-text mb-3 mb-md-0">Мои палитры</h1>
+            <h1 class="gradient-text mb-3 mb-md-0">{{ _('Мои палитры') }}</h1>
             {% if palettes %}
             <div class="d-flex flex-wrap align-items-center gap-3">
                 <div class="input-group">
                     <span class="input-group-text"><i class="fas fa-search"></i></span>
-                    <input type="text" id="paletteSearch" class="form-control" placeholder="Поиск по названию палитры">
+                    <input type="text" id="paletteSearch" class="form-control" placeholder="{{ _('Поиск по названию палитры') }}">
                 </div>
                 <select id="colorCountFilter" class="form-select">
-                    <option value="">Все количества цветов</option>
-                    <option value="3">Только 3 цвета</option>
-                    <option value="4">Только 4 цвета</option>
-                    <option value="5">Только 5 цветов</option>
-                    <option value="6">Только 6 цветов</option>
-                    <option value="7">Только 7 цветов</option>
-                    <option value="8">Только 8 цветов</option>
-                    <option value="9">Только 9 цветов</option>
-                    <option value="10">Только 10 цветов</option>
-                    <option value="11">Только 11 цветов</option>
-                    <option value="12">Только 12 цветов</option>
-                    <option value="13">Только 13 цветов</option>
-                    <option value="14">Только 14 цветов</option>
-                    <option value="15">Только 15 цветов</option>
+                    <option value="">{{ _('Все количества цветов') }}</option>
+                    {% for count in range(3, 16) %}
+                    <option value="{{ count }}">{{ _('Только %(count)s цветов', count=count) }}</option>
+                    {% endfor %}
                 </select>
                 <select id="paletteSort" class="form-select">
-                    <option value="created_desc">По дате: новые сначала</option>
-                    <option value="created_asc">По дате: старые сначала</option>
-                    <option value="name_asc">По названию: А–Я</option>
-                    <option value="name_desc">По названию: Я–А</option>
-                    <option value="colors_asc">По количеству цветов: меньше–больше</option>
-                    <option value="colors_desc">По количеству цветов: больше–меньше</option>
+                    <option value="created_desc">{{ _('По дате: новые сначала') }}</option>
+                    <option value="created_asc">{{ _('По дате: старые сначала') }}</option>
+                    <option value="name_asc">{{ _('По названию: А-Я') }}</option>
+                    <option value="name_desc">{{ _('По названию: Я-А') }}</option>
+                    <option value="colors_asc">{{ _('По количеству цветов: меньше-больше') }}</option>
+                    <option value="colors_desc">{{ _('По количеству цветов: больше-меньше') }}</option>
                 </select>
                 <div class="text-muted small">
-                    Показано палитр:
+                    {{ _('Показано палитр:') }}
                     <span id="paletteCountVisible">0</span>
                     <span class="text-muted">/ <span id="paletteCountTotal">0</span></span>
                 </div>
@@ -54,7 +44,7 @@
             {% if palettes %}
             <div class="row" id="palettesContainer">
                 {% for palette in palettes %}
-                {% set colors_json = palette.colors|join('","') %}
+                {% set colors_json = palette.colors|join('\",\"') %}
                 <div class="col-md-6 col-lg-4 mb-4 palette-card" data-name="{{ palette.name | lower }}"
                     data-color-count="{{ palette.colors | length }}" data-palette-id="{{ palette.id }}"
                     data-palette-name="{{ palette.name }}"
@@ -69,41 +59,37 @@
                                 </div>
                                 {% endfor %}
                             </div>
-                            <small class="text-muted">Создано: {{ palette.created_at.strftime('%d.%m.%Y %H:%M')
-                                }}</small>
+                            <small class="text-muted">{{ _('Создано:') }} {{ palette.created_at.strftime('%d.%m.%Y %H:%M') if current_lang == 'ru' else palette.created_at.strftime('%Y-%m-%d %H:%M') }}</small>
                             <div class="mt-2 mt-auto">
                                 <button class="btn btn-sm btn-outline-primary me-1"
-                                    onclick="copyPalette('{{ palette.colors | join(' ') }}')">Копировать</button>
+                                    onclick="copyPalette('{{ palette.colors | join(' ') }}')">{{ _('Копировать') }}</button>
                                 <div class="btn-group" role="group">
                                     <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle"
                                         data-bs-toggle="dropdown" aria-expanded="false">
-                                        Экспорт
+                                        {{ _('Экспорт') }}
                                     </button>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item export-option" href="#" data-format="json"
                                                 data-colors='["{{ colors_json }}"]'
                                                 data-name="{{ palette.name }}">JSON</a></li>
                                         <li><a class="dropdown-item export-option" href="#" data-format="gpl"
-                                                data-colors='["{{ colors_json }}"]' data-name="{{ palette.name }}">GPL
-                                                (GIMP)</a></li>
+                                                data-colors='["{{ colors_json }}"]' data-name="{{ palette.name }}">GPL</a></li>
                                         <li><a class="dropdown-item export-option" href="#" data-format="ase"
-                                                data-colors='["{{ colors_json }}"]' data-name="{{ palette.name }}">ASE
-                                                (Adobe)</a></li>
+                                                data-colors='["{{ colors_json }}"]' data-name="{{ palette.name }}">ASE</a></li>
                                         <li><a class="dropdown-item export-option" href="#" data-format="csv"
                                                 data-colors='["{{ colors_json }}"]'
                                                 data-name="{{ palette.name }}">CSV</a></li>
                                         <li><a class="dropdown-item export-option" href="#" data-format="aco"
-                                                data-colors='["{{ colors_json }}"]' data-name="{{ palette.name }}">ACO
-                                                (Adobe)</a></li>
+                                                data-colors='["{{ colors_json }}"]' data-name="{{ palette.name }}">ACO</a></li>
                                     </ul>
                                 </div>
                                 <button class="btn btn-sm btn-outline-secondary mt-2 me-1 btn-rename-palette"
                                     data-palette-id="{{ palette.id }}" data-palette-name="{{ palette.name }}">
-                                    Переименовать
+                                    {{ _('Переименовать') }}
                                 </button>
                                 <button class="btn btn-sm btn-outline-danger mt-2 btn-delete-palette"
                                     data-palette-id="{{ palette.id }}" data-palette-name="{{ palette.name }}">
-                                    Удалить
+                                    {{ _('Удалить') }}
                                 </button>
                             </div>
                         </div>
@@ -114,54 +100,52 @@
             {% else %}
             <div class="text-center py-5">
                 <i class="fas fa-palette fa-3x text-muted mb-3"></i>
-                <h4 class="text-muted">У вас пока нет сохраненных палитр</h4>
-                <p class="text-muted">Создайте и сохраните свою первую палитру!</p>
-                <a href="{{ url_for('index') }}" class="btn btn-primary">Создать палитру</a>
+                <h4 class="text-muted">{{ _('У вас пока нет сохраненных палитр') }}</h4>
+                <p class="text-muted">{{ _('Создайте и сохраните свою первую палитру!') }}</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary">{{ _('Создать палитру') }}</a>
             </div>
             {% endif %}
         </div>
     </div>
 </div>
 
-<!-- Модальное окно подтверждения удаления палитры -->
 <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="deleteModalLabel">Подтверждение удаления</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                <h5 class="modal-title" id="deleteModalLabel">{{ _('Подтверждение удаления') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ _('Закрыть') }}"></button>
             </div>
             <div class="modal-body">
-                <p id="deleteModalText">Вы уверены, что хотите удалить эту палитру?</p>
+                <p id="deleteModalText">{{ _('Вы уверены, что хотите удалить эту палитру?') }}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Удалить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Отмена') }}</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteBtn">{{ _('Удалить') }}</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Модальное окно переименования палитры -->
 <div class="modal fade" id="renameModal" tabindex="-1" aria-labelledby="renameModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="renameModalLabel">Переименовать палитру</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                <h5 class="modal-title" id="renameModalLabel">{{ _('Переименовать палитру') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ _('Закрыть') }}"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label for="newPaletteName" class="form-label">Новое название палитры</label>
+                    <label for="newPaletteName" class="form-label">{{ _('Новое название палитры') }}</label>
                     <input type="text" class="form-control" id="newPaletteName" maxlength="100" required>
                     <div class="form-text">
-                        Название должно быть уникальным среди ваших палитр.
+                        {{ _('Название должно быть уникальным среди ваших палитр.') }}
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                <button type="button" class="btn btn-primary" id="confirmRenameBtn">Сохранить</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{{ _('Отмена') }}</button>
+                <button type="button" class="btn btn-primary" id="confirmRenameBtn">{{ _('Сохранить') }}</button>
             </div>
         </div>
     </div>

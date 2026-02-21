@@ -1,4 +1,5 @@
-// Эффект изменения стиля шапки при скролле страницы
+const t = window.t || ((key, fallback) => fallback || key);
+
 window.addEventListener('scroll', function () {
     const header = document.querySelector('header');
     if (window.scrollY > 50) {
@@ -8,7 +9,6 @@ window.addEventListener('scroll', function () {
     }
 });
 
-// Плавная прокрутка по клику на якорные ссылки навигации
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
@@ -25,10 +25,9 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     });
 });
 
-// Анимация наведения для кнопок (кроме кнопки "Пересчитать")
 document.querySelectorAll('.btn-primary:not(#reanalyzeBtn), .btn-outline-primary:not(#reanalyzeBtn), .btn-secondary:not(#reanalyzeBtn)').forEach(button => {
     button.addEventListener('mouseenter', function () {
-        if (!this.id.includes('reanalyze')) { // Дополнительная проверка
+        if (!this.id.includes('reanalyze')) {
             this.style.transform = 'translateY(-3px)';
         }
     });
@@ -40,7 +39,6 @@ document.querySelectorAll('.btn-primary:not(#reanalyzeBtn), .btn-outline-primary
     });
 });
 
-// Подсветка активного пункта меню при клике
 document.querySelectorAll('.nav-link').forEach(link => {
     link.addEventListener('click', function () {
         document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
@@ -48,7 +46,6 @@ document.querySelectorAll('.nav-link').forEach(link => {
     });
 });
 
-// Небольшая анимация логотипа при наведении
 const logo = document.querySelector('.header__logo');
 if (logo) {
     logo.addEventListener('mouseenter', () => {
@@ -66,7 +63,6 @@ if (logo) {
     });
 }
 
-// Плавное появление страницы при начале загрузки
 window.addEventListener('load', function () {
     document.body.style.opacity = '0';
     document.body.style.transition = 'opacity 0.5s';
@@ -76,12 +72,11 @@ window.addEventListener('load', function () {
     }, 100);
 });
 
-// Добавление класса активного пункта меню для текущей страницы
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof bootstrap === 'undefined') {
-        console.error('Bootstrap не загружен!');
+        console.error(t('bootstrap_missing', 'Bootstrap не загружен!'));
     } else {
-        console.log('Bootstrap загружен успешно');
+        console.log(t('bootstrap_loaded', 'Bootstrap загружен успешно'));
     }
 
     const saveModalElement = document.getElementById('saveModal');
@@ -99,7 +94,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Очистка сохраненной палитры в хранилище браузера при выходе из аккаунта
     const logoutForm = document.getElementById('logoutForm');
     if (logoutForm) {
         logoutForm.addEventListener('submit', () => {
@@ -110,7 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Универсальная функция для показа небольших всплывающих уведомлений
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `position-fixed bottom-0 end-0 m-3 p-3 ${type === 'error' ? 'bg-danger' : 'bg-success'} text-white rounded shadow`;

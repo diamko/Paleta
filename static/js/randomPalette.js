@@ -1,4 +1,6 @@
-// Генерация случайной палитры и взаимодействие с пользователем
+const t = window.t || ((key, fallback) => fallback || key);
+const currentLang = window.currentLang || 'en';
+
 document.addEventListener('DOMContentLoaded', function() {
     const generateBtn = document.getElementById('generateBtn');
     const colorPalette = document.getElementById('colorPalette');
@@ -23,14 +25,12 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
-    // Генерация палитры при клике на кнопку
     generateBtn.addEventListener('click', () => {
-        const count = parseInt(colorCountSelect.value);
+        const count = parseInt(colorCountSelect.value, 10);
         currentColors = generateRandomColors(count);
         displayPalette(currentColors);
     });
 
-    // Функция генерации случайных цветов
     function generateRandomColors(count) {
         const colors = [];
         for (let i = 0; i < count; i++) {
@@ -57,7 +57,23 @@ document.addEventListener('DOMContentLoaded', function() {
         return null;
     }
 
-    // Функция отображения палитры
+    function showToast(message, type = 'success') {
+        if (typeof window.showToast === 'function') {
+            window.showToast(message, type);
+            return;
+        }
+
+        const toast = document.createElement('div');
+        toast.className = `position-fixed bottom-0 end-0 m-3 p-3 ${type === 'error' ? 'bg-danger' : 'bg-success'} text-white rounded shadow`;
+        toast.style.zIndex = '1060';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 2000);
+    }
+
     function displayPalette(colors) {
         colorPalette.innerHTML = '';
 
@@ -72,10 +88,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const item = document.createElement('div');
             item.className = 'palette-edit-item';
             item.innerHTML = `
-                <button type="button" class="palette-edit-preview" title="Скопировать HEX"></button>
+                <button type="button" class="palette-edit-preview" title="${t('copy_hex_title', 'Скопировать HEX')}"></button>
                 <div class="palette-edit-controls">
-                    <input type="color" class="palette-edit-picker" value="${color.toLowerCase()}" aria-label="Выбор цвета ${index + 1}">
-                    <input type="text" class="palette-edit-hex" value="${color}" maxlength="7" spellcheck="false" aria-label="HEX цвета ${index + 1}">
+                    <input type="color" class="palette-edit-picker" value="${color.toLowerCase()}" aria-label="${t('color_picker_label', 'Выбор цвета {index}', { index: index + 1 })}">
+                    <input type="text" class="palette-edit-hex" value="${color}" maxlength="7" spellcheck="false" aria-label="${t('color_hex_label', 'HEX цвета {index}', { index: index + 1 })}">
                 </div>
             `;
 
@@ -90,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (!normalized) {
                     if (showError) {
                         hexInput.value = currentColors[index];
-                        showToast('Введите корректный HEX-код, например #A1B2C3', 'error');
+                        showToast(t('hex_validation_error', 'Введите корректный HEX-код, например #A1B2C3'), 'error');
                     }
                     return false;
                 }
@@ -130,40 +146,35 @@ document.addEventListener('DOMContentLoaded', function() {
             colorPalette.appendChild(item);
         });
 
-        // Показываем секцию с действиями (сохранить, экспортировать)
         const actionsSection = document.getElementById('actionsSection');
         if (actionsSection) {
             actionsSection.classList.remove('d-none');
         }
     }
 
-    // Копирование HEX-кода в буфер обмена
     async function copyToClipboard(text) {
         try {
             await navigator.clipboard.writeText(text);
-            showToast('HEX код скопирован!');
+            showToast(t('hex_copied', 'HEX код скопирован!'));
         } catch (err) {
-            console.error('Ошибка копирования:', err);
-            // Резервный способ для старых браузеров
+            console.error(t('copy_error', 'Ошибка копирования:'), err);
             const textArea = document.createElement('textarea');
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
             document.execCommand('copy');
             document.body.removeChild(textArea);
-            showToast('HEX код скопирован!');
+            showToast(t('hex_copied', 'HEX код скопирован!'));
         }
     }
 
-    // Обработчик для сохранения палитры
     if (savePaletteBtn) {
         savePaletteBtn.addEventListener('click', () => {
             if (currentColors.length === 0) {
-                showToast('Сначала сгенерируйте палитру!', 'error');
+                showToast(t('generate_palette_first', 'Сначала сгенерируйте палитру!'), 'error');
                 return;
             }
 
-            // Заполняем модальное окно текущими цветами
             const modalPalette = document.getElementById('modalPalette');
             if (modalPalette) {
                 modalPalette.innerHTML = '';
@@ -179,7 +190,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
-            // Очищаем поле ввода названия палитры
             const paletteNameInput = document.getElementById('paletteName');
             if (paletteNameInput) {
                 paletteNameInput.value = '';
@@ -187,21 +197,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Обработчик для подтверждения сохранения палитры
     if (confirmSaveBtn) {
         confirmSaveBtn.addEventListener('click', async () => {
             const paletteNameInput = document.getElementById('paletteName');
             const originalValue = paletteNameInput?.value || '';
             const paletteName = originalValue.trim();
 
-            // Если пользователь ввел только пробелы, это ошибка.
             if (originalValue && !paletteName) {
-                showToast('Название палитры не может состоять только из пробелов', 'error');
+                showToast(t('palette_name_spaces', 'Название палитры не может состоять только из пробелов'), 'error');
                 return;
             }
 
-            // Если название пустое (пользователь ничего не ввел), используем значение по умолчанию.
-            const finalName = paletteName || 'Моя палитра';
+            const finalName = paletteName || t('default_palette_name', 'Моя палитра');
 
             const saveModal = bootstrap.Modal.getInstance(document.getElementById('saveModal'));
 
@@ -219,17 +226,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (!response.ok) {
                     if (response.status === 401) {
-                        showToast('Сессия истекла. Пожалуйста, войдите снова.', 'error');
-                        window.location.href = '/login';
+                        showToast(t('session_expired_login', 'Сессия истекла. Пожалуйста, войдите снова.'), 'error');
+                        window.location.href = `/${currentLang}/login`;
                         return;
                     }
-                    // Для других ошибок пробуем получить сообщение из ответа.
-                    let errorMessage = 'Ошибка при сохранении';
+                    let errorMessage = t('save_error', 'Ошибка при сохранении');
                     try {
                         const errorData = await response.json();
                         errorMessage = errorData.error || errorMessage;
-                    } catch (e) {
-                        // Если ответ не JSON, оставляем общее сообщение.
+                    } catch (_e) {
+                        // Ignore parse errors.
                     }
                     showToast(errorMessage, 'error');
                     return;
@@ -238,25 +244,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await response.json();
 
                 if (data.success) {
-                    showToast('Палитра сохранена!');
+                    showToast(t('palette_saved', 'Палитра сохранена!'));
                     if (saveModal) saveModal.hide();
                 } else {
-                    showToast(data.error || 'Ошибка при сохранении', 'error');
+                    showToast(data.error || t('save_error', 'Ошибка при сохранении'), 'error');
                 }
             } catch (error) {
-                console.error('Ошибка сохранения:', error);
-                showToast('Ошибка при сохранении палитры', 'error');
+                console.error('Random palette save error:', error);
+                showToast(t('save_palette_error', 'Ошибка при сохранении палитры'), 'error');
             }
         });
     }
 
-    // Обработчики для экспорта палитры
     exportOptions.forEach(option => {
         option.addEventListener('click', async (e) => {
             e.preventDefault();
 
             if (currentColors.length === 0) {
-                showToast('Сначала сгенерируйте палитру!', 'error');
+                showToast(t('generate_palette_first', 'Сначала сгенерируйте палитру!'), 'error');
                 return;
             }
 
@@ -272,12 +277,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
 
                 if (!response.ok) {
-                    let errorMessage = 'Ошибка при экспорте';
+                    let errorMessage = t('export_error', 'Ошибка при экспорте');
                     try {
                         const errorData = await response.json();
                         errorMessage = errorData.error || errorMessage;
                     } catch (_error) {
-                        // Игнорируем ошибки разбора.
+                        // Ignore parse errors.
                     }
                     showToast(errorMessage, 'error');
                     return;
@@ -293,8 +298,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
             } catch (error) {
-                console.error('Ошибка экспорта:', error);
-                showToast('Ошибка при экспорте', 'error');
+                console.error('Random palette export error:', error);
+                showToast(t('export_error', 'Ошибка при экспорте'), 'error');
             }
         });
     });

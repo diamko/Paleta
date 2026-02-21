@@ -43,7 +43,7 @@
                 </div>
 
                 {% if current_user.is_authenticated %}
-                    <span class="me-2">
+                    <span class="mx-2">
                         {{ _('Привет,') }}
                         <a href="{{ url_for('profile') }}" class="link-primary fw-semibold text-decoration-none">
                             {{ current_user.username }}

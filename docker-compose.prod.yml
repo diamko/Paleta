@@ -1,4 +1,20 @@
 services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: paleta-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-paleta}
+      POSTGRES_USER: ${POSTGRES_USER:-paleta}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-paleta_password}
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-paleta} -d ${POSTGRES_DB:-paleta}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
   app:
     build:
       context: .
@@ -9,12 +25,16 @@ services:
     container_name: paleta-app
     env_file:
       - .env.prod
-    command: gunicorn -w 1 --threads 8 -b 0.0.0.0:8000 app:app
+    command: >
+      bash -lc "flask --app app db upgrade &&
+      gunicorn -w 1 --threads 8 -b 0.0.0.0:8000 app:app"
     ports:
       - "127.0.0.1:8000:8000"
     volumes:
-      - ./data/instance:/app/instance
       - ./data/uploads:/app/static/uploads
+    depends_on:
+      postgres:
+        condition: service_healthy
     healthcheck:
       test:
         [

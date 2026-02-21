@@ -26,24 +26,28 @@ from flask import (
 from werkzeug.routing import BuildError
 
 from config import Config
-from extensions import db, login_manager, cors, babel
+from extensions import babel, cors, db, login_manager, migrate
 import models  # noqa: F401 - регистрирует модели для db.create_all()
 from routes.pages import register_routes as register_page_routes
 from routes.auth import register_routes as register_auth_routes
 from routes.api import register_routes as register_api_routes
+from routes.api_v1 import register_routes as register_api_v1_routes
 from utils.cleanup import cleanup_old_uploads
 from flask_babel import gettext as _
 from utils.i18n import is_supported_language, resolve_request_language
 from utils.rate_limit import InMemoryRateLimiter
 
 
-def create_app() -> Flask:
+def create_app(config_override: dict | None = None) -> Flask:
     """Фабрика приложения, собирающая все модули воедино."""
     app = Flask(__name__)
     app.config.from_object(Config)
+    if config_override:
+        app.config.update(config_override)
 
     # Инициализация расширений
     db.init_app(app)
+    migrate.init_app(app, db)
     login_manager.init_app(app)
 
     def select_locale() -> str:
@@ -70,10 +74,12 @@ def create_app() -> Flask:
     register_page_routes(app)
     register_auth_routes(app)
     register_api_routes(app)
+    register_api_v1_routes(app)
 
     with app.app_context():
-        # Создаем отсутствующие таблицы (без изменения существующих колонок)
-        db.create_all()
+        # Dev fallback для локального запуска без миграций.
+        if app.config["AUTO_CREATE_TABLES"]:
+            db.create_all()
 
     def _resolve_request_lang(url_lang: str | None = None) -> str:
         supported_languages: tuple[str, ...] = app.config["SUPPORTED_LANGUAGES"]
@@ -238,6 +244,9 @@ def create_app() -> Flask:
             return None
 
         if request.endpoint in {"healthz"}:
+            return None
+
+        if request.path.startswith("/api/v1/"):
             return None
 
         if _is_csrf_valid():

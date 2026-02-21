@@ -15,7 +15,7 @@ You can build palettes from uploaded images (dominant color extraction with KMea
 
 The project is aimed at designers, frontend developers, and anyone who works with color systems and needs a fast workflow from image to ready-to-use color codes.
 
-Production deployment guide (SQLite + Docker + Nginx + HTTPS): `DEPLOYMENT.ru.md`.
+Production deployment guide (PostgreSQL + Docker + Nginx + HTTPS): `DEPLOYMENT.ru.md`.
 
 ## Table of Contents
 
@@ -80,10 +80,12 @@ To provide a practical, browser-based tool for turning visual references into re
 - `Flask-SQLAlchemy`
 - `Flask-Login`
 - `Flask-CORS`
+- `Flask-Migrate` (Alembic)
+- `PyJWT`
 - `Pillow`
 - `NumPy`
 - `scikit-learn` (KMeans)
-- `SQLite` (default database)
+- `SQLite` (default local DB) / `PostgreSQL` (production target)
 - `Bootstrap 5` + Vanilla JavaScript
 
 ## How It Works
@@ -132,21 +134,19 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4) Initialize database (first run)
+### 4) Initialize database schema (first run)
 
 Linux/macOS:
 
 ```bash
-python3 -c "from app import app; from extensions import db; import models; app.app_context().push(); db.create_all()"
+flask --app app db upgrade
 ```
 
 Windows (PowerShell):
 
 ```bash
-python -c "from app import app; from extensions import db; import models; app.app_context().push(); db.create_all()"
+flask --app app db upgrade
 ```
-
-By default, SQLite DB is created at `instance/paleta.db`.
 
 ## Run the Project
 
@@ -180,10 +180,16 @@ Main config is in `config.py`.
 
 - `SECRET_KEY` (required in `production`, optional in local development)
 - `DATABASE_URL` (optional; defaults to local SQLite in development and `/app/instance` SQLite in production)
+- `AUTO_CREATE_TABLES` (dev fallback for `db.create_all`; default: `true` in development, `false` in production)
 - `FLASK_ENV` (`production` for prod setup)
 - `SESSION_COOKIE_SECURE` (`true` by default in production, `false` in development)
 - `CORS_ENABLED` (`false` by default; enable only if API is called from another origin)
 - `CORS_ORIGINS` (comma-separated list of allowed origins when `CORS_ENABLED=true`)
+- `JWT_SECRET_KEY` (separate secret for JWT signing; falls back to `SECRET_KEY` if not set)
+- `JWT_ACCESS_TTL_MINUTES` (default `15`)
+- `JWT_REFRESH_TTL_DAYS` (default `30`)
+- `JWT_ISSUER` (default `paleta`)
+- `JWT_AUDIENCE` (default `paleta-mobile`)
 - `MAX_IMAGE_PIXELS` (max image resolution in pixels; default `20000000`)
 - `PASSWORD_RESET_CODE_TTL_MINUTES` (reset code lifetime in minutes; default `15`)
 - `PASSWORD_RESET_MAX_ATTEMPTS` (max code attempts before forcing re-request; default `5`)
@@ -195,10 +201,14 @@ Example (Linux/macOS):
 
 ```bash
 export SECRET_KEY="replace-with-a-secure-random-value"
-export DATABASE_URL="sqlite:///paleta.db"
+export JWT_SECRET_KEY="replace-with-another-secure-random-value"
+export DATABASE_URL="postgresql+psycopg://paleta:paleta_password@localhost:5432/paleta"
 export FLASK_ENV="development"
 export SESSION_COOKIE_SECURE="false"
 export CORS_ENABLED="false"
+export AUTO_CREATE_TABLES="true"
+export JWT_ACCESS_TTL_MINUTES="15"
+export JWT_REFRESH_TTL_DAYS="30"
 export MAX_IMAGE_PIXELS="20000000"
 export PASSWORD_RESET_CODE_TTL_MINUTES="15"
 export PASSWORD_RESET_MAX_ATTEMPTS="5"
@@ -260,6 +270,27 @@ Registration password requirements:
 
 ## API Endpoints
 
+### Mobile API v1 (JWT)
+
+| Method   | Endpoint                         | Description                                          |
+| -------- | -------------------------------- | ---------------------------------------------------- |
+| `POST`   | `/api/v1/auth/login`             | Login, return access+refresh tokens                 |
+| `POST`   | `/api/v1/auth/refresh`           | Rotate refresh token and issue new token pair       |
+| `POST`   | `/api/v1/auth/logout`            | Revoke refresh token                                 |
+| `GET`    | `/api/v1/users/me`               | Current user profile (JWT required)                 |
+| `GET`    | `/api/v1/palettes`               | Palette list with cursor pagination (JWT required)  |
+| `POST`   | `/api/v1/palettes`               | Create palette (JWT required)                       |
+| `PATCH`  | `/api/v1/palettes/<palette_id>`  | Update palette name/colors (JWT required)           |
+| `DELETE` | `/api/v1/palettes/<palette_id>`  | Delete palette (JWT required)                       |
+| `POST`   | `/api/v1/upload`                 | Upload image and extract palette                     |
+| `POST`   | `/api/v1/export?format=<type>`   | Export palette (`json`, `gpl`, `ase`, `csv`, `aco`) |
+
+Response contract:
+- success: `{ "success": true, "data": ..., "meta": ... }`
+- error: `{ "success": false, "error": { "code": "...", "message": "...", "details": ... } }`
+
+### Legacy Web API (session + CSRF)
+
 | Method   | Endpoint                            | Description                                         |
 | -------- | ----------------------------------- | --------------------------------------------------- |
 | `POST`   | `/api/upload`                       | Upload image and extract palette                    |
@@ -290,7 +321,13 @@ Paleta/
 
 ## Testing
 
-Automated tests are not added yet.
+Automated tests are available with `pytest`.
+
+Run:
+
+```bash
+pytest
+```
 
 Manual smoke test checklist:
 
@@ -303,8 +340,6 @@ Manual smoke test checklist:
 
 ## Roadmap
 
-- Add automated test suite (`pytest`).
-- Add migration support (`Flask-Migrate` / Alembic).
 - Add production-ready config profiles.
 - Implement PNG export.
 - Add i18n (currently UI texts are mostly Russian).

@@ -23,3 +23,4 @@ class User(UserMixin, db.Model):
         uselist=False,
         cascade="all, delete-orphan",
     )
+    refresh_tokens = db.relationship("RefreshToken", back_populates="user", lazy=True)

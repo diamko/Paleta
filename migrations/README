@@ -1,0 +1,2 @@
+Single-database configuration for Flask-Migrate.
+Use `flask db upgrade` to apply revisions from migrations/versions.

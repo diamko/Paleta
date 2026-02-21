@@ -11,6 +11,8 @@ data/instance/*
 !data/instance/.gitkeep
 data/uploads/*
 !data/uploads/.gitkeep
+data/postgres/*
+!data/postgres/.gitkeep
 backups/
 instance/*.db
 *.pem

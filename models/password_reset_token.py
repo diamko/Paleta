@@ -3,9 +3,13 @@
 Модуль: models/password_reset_token.py – одноразовые коды восстановления пароля.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from extensions import db
+
+
+def _utcnow():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class PasswordResetToken(db.Model):
@@ -17,6 +21,6 @@ class PasswordResetToken(db.Model):
     attempts = db.Column(db.Integer, nullable=False, default=0)
     expires_at = db.Column(db.DateTime, nullable=False, index=True)
     used_at = db.Column(db.DateTime, nullable=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
+    created_at = db.Column(db.DateTime, default=_utcnow, nullable=False, index=True)
 
     user = db.relationship("User")

@@ -1,0 +1,1 @@
+0 3 * * * PROJECT_DIR=/opt/paleta /opt/paleta/deploy/scripts/backup_postgres.sh >> /var/log/paleta-postgres-backup.log 2>&1

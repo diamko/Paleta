@@ -68,6 +68,7 @@ class Config:
         "sqlite:////app/instance/paleta.db" if _PRODUCTION else "sqlite:///paleta.db",
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    AUTO_CREATE_TABLES = _get_env_bool("AUTO_CREATE_TABLES", default=not _PRODUCTION)
     SESSION_COOKIE_SECURE = _get_env_bool("SESSION_COOKIE_SECURE", default=_PRODUCTION)
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = os.environ.get("SESSION_COOKIE_SAMESITE", "Lax")
@@ -119,6 +120,12 @@ class Config:
         for code in _get_env_list("RU_COUNTRY_CODES", default=["RU"])
         if code.strip()
     } or {"RU"}
+
+    JWT_ACCESS_TTL_MINUTES = _get_env_int("JWT_ACCESS_TTL_MINUTES", 15)
+    JWT_REFRESH_TTL_DAYS = _get_env_int("JWT_REFRESH_TTL_DAYS", 30)
+    JWT_ISSUER = os.environ.get("JWT_ISSUER", "paleta").strip() or "paleta"
+    JWT_AUDIENCE = os.environ.get("JWT_AUDIENCE", "paleta-mobile").strip() or "paleta-mobile"
+    JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", SECRET_KEY)
 
     @staticmethod
     def allowed_file(filename: str) -> bool:

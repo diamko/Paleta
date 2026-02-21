@@ -15,7 +15,7 @@ Paleta - это веб-приложение для генерации, реда�
 
 Проект ориентирован на дизайнеров, frontend-разработчиков и всех, кто работает с цветом и хочет быстро переходить от изображения к готовым HEX-кодам.
 
-Гайд по продакшн-деплою (SQLite + Docker + Nginx + HTTPS): `DEPLOYMENT.ru.md`.
+Гайд по продакшн-деплою (PostgreSQL + Docker + Nginx + HTTPS): `DEPLOYMENT.ru.md`.
 
 <a id="toc-ru"></a>
 
@@ -88,10 +88,12 @@ Paleta - это веб-приложение для генерации, реда�
 - `Flask-SQLAlchemy`
 - `Flask-Login`
 - `Flask-CORS`
+- `Flask-Migrate` (Alembic)
+- `PyJWT`
 - `Pillow`
 - `NumPy`
 - `scikit-learn` (KMeans)
-- `SQLite` (база данных по умолчанию)
+- `SQLite` (локально по умолчанию) / `PostgreSQL` (целевая production БД)
 - `Bootstrap 5` + Vanilla JavaScript
 
 <a id="workflow-ru"></a>
@@ -144,21 +146,19 @@ pip install --upgrade pip
 pip install -r requirements.txt
 ```
 
-### 4) Инициализация базы данных (первый запуск)
+### 4) Инициализация схемы БД (первый запуск)
 
 Linux/macOS:
 
 ```bash
-python3 -c "from app import app; from extensions import db; import models; app.app_context().push(); db.create_all()"
+flask --app app db upgrade
 ```
 
 Windows (PowerShell):
 
 ```bash
-python -c "from app import app; from extensions import db; import models; app.app_context().push(); db.create_all()"
+flask --app app db upgrade
 ```
-
-По умолчанию SQLite-база создается в `instance/paleta.db`.
 
 <a id="run-ru"></a>
 
@@ -196,10 +196,16 @@ flask --app app run
 
 - `SECRET_KEY` (обязательная в `production`, опциональна для локальной разработки)
 - `DATABASE_URL` (опционально; по умолчанию локальная SQLite в development и SQLite в `/app/instance` в production)
+- `AUTO_CREATE_TABLES` (dev fallback для `db.create_all`; по умолчанию `true` в development и `false` в production)
 - `FLASK_ENV` (`production` для продакшна)
 - `SESSION_COOKIE_SECURE` (`true` по умолчанию в production, `false` в development)
 - `CORS_ENABLED` (`false` по умолчанию; включайте только если API вызывается с другого origin)
 - `CORS_ORIGINS` (список разрешённых origin через запятую, если `CORS_ENABLED=true`)
+- `JWT_SECRET_KEY` (отдельный ключ подписи JWT; если не задан, берется `SECRET_KEY`)
+- `JWT_ACCESS_TTL_MINUTES` (по умолчанию `15`)
+- `JWT_REFRESH_TTL_DAYS` (по умолчанию `30`)
+- `JWT_ISSUER` (по умолчанию `paleta`)
+- `JWT_AUDIENCE` (по умолчанию `paleta-mobile`)
 - `MAX_IMAGE_PIXELS` (максимальное разрешение изображения в пикселях; по умолчанию `20000000`)
 - `PASSWORD_RESET_CODE_TTL_MINUTES` (время жизни кода восстановления в минутах; по умолчанию `15`)
 - `PASSWORD_RESET_MAX_ATTEMPTS` (макс. число попыток ввода кода; по умолчанию `5`)
@@ -211,10 +217,14 @@ flask --app app run
 
 ```bash
 export SECRET_KEY="replace-with-a-secure-random-value"
-export DATABASE_URL="sqlite:///paleta.db"
+export JWT_SECRET_KEY="replace-with-another-secure-random-value"
+export DATABASE_URL="postgresql+psycopg://paleta:paleta_password@localhost:5432/paleta"
 export FLASK_ENV="development"
 export SESSION_COOKIE_SECURE="false"
 export CORS_ENABLED="false"
+export AUTO_CREATE_TABLES="true"
+export JWT_ACCESS_TTL_MINUTES="15"
+export JWT_REFRESH_TTL_DAYS="30"
 export MAX_IMAGE_PIXELS="20000000"
 export PASSWORD_RESET_CODE_TTL_MINUTES="15"
 export PASSWORD_RESET_MAX_ATTEMPTS="5"
@@ -278,6 +288,27 @@ export PASSWORD_RESET_MAX_ATTEMPTS="5"
 
 ## API-эндпоинты
 
+### Mobile API v1 (JWT)
+
+| Метод    | Эндпоинт                         | Описание                                             |
+| -------- | -------------------------------- | ---------------------------------------------------- |
+| `POST`   | `/api/v1/auth/login`             | Логин, возврат access+refresh токенов               |
+| `POST`   | `/api/v1/auth/refresh`           | Ротация refresh токена и выпуск новой пары токенов  |
+| `POST`   | `/api/v1/auth/logout`            | Отзыв refresh токена                                 |
+| `GET`    | `/api/v1/users/me`               | Профиль текущего пользователя (JWT required)        |
+| `GET`    | `/api/v1/palettes`               | Список палитр с cursor-пагинацией (JWT required)    |
+| `POST`   | `/api/v1/palettes`               | Создание палитры (JWT required)                     |
+| `PATCH`  | `/api/v1/palettes/<palette_id>`  | Обновление палитры (JWT required)                   |
+| `DELETE` | `/api/v1/palettes/<palette_id>`  | Удаление палитры (JWT required)                     |
+| `POST`   | `/api/v1/upload`                 | Загрузка изображения и извлечение палитры           |
+| `POST`   | `/api/v1/export?format=<type>`   | Экспорт палитры (`json`, `gpl`, `ase`, `csv`, `aco`) |
+
+Контракт ответа:
+- success: `{ "success": true, "data": ..., "meta": ... }`
+- error: `{ "success": false, "error": { "code": "...", "message": "...", "details": ... } }`
+
+### Legacy Web API (session + CSRF)
+
 | Метод    | Эндпоинт                            | Описание                                             |
 | -------- | ----------------------------------- | ---------------------------------------------------- |
 | `POST`   | `/api/upload`                       | Загрузка изображения и извлечение палитры            |
@@ -312,7 +343,13 @@ Paleta/
 
 ## Тестирование
 
-Автоматические тесты пока не добавлены.
+Автоматические тесты доступны через `pytest`.
+
+Запуск:
+
+```bash
+pytest
+```
 
 Чеклист ручной smoke-проверки:
 
@@ -327,8 +364,6 @@ Paleta/
 
 ## Roadmap
 
-- Добавить автоматические тесты (`pytest`).
-- Добавить миграции БД (`Flask-Migrate` / Alembic).
 - Ввести отдельные профили конфигурации для production.
 - Реализовать экспорт в PNG.
 - Добавить полноценную i18n-локализацию интерфейса.

@@ -4,14 +4,13 @@
 """
 
 import os
-import re
 import tempfile
 import uuid
 from datetime import datetime
 
-from PIL import Image, UnidentifiedImageError
 from flask import current_app, jsonify, request, send_file, send_from_directory, session
 from flask_login import current_user, login_required
+from sqlalchemy.exc import IntegrityError
 
 from config import Config
 from extensions import db
@@ -20,10 +19,14 @@ from models.palette import Palette
 from models.upload import Upload
 from utils.export_handler import export_palette_data
 from utils.image_processor import extract_colors_from_image
+from utils.palette_service import (
+    PaletteValidationError,
+    clamp_color_count,
+    normalize_palette_colors,
+    resolve_palette_name,
+    validate_uploaded_image,
+)
 from utils.rate_limit import get_client_identifier
-
-Image.MAX_IMAGE_PIXELS = Config.MAX_IMAGE_PIXELS
-
 
 def _allowed_file(filename: str) -> bool:
     return Config.allowed_file(filename)
@@ -44,58 +47,25 @@ def _rate_limited(bucket: str, limit: int, window_seconds: int, identity: str | 
 
 
 def _clamp_color_count(raw_value: int | None) -> int:
-    if raw_value is None:
-        return 5
-    return max(Config.MIN_COLOR_COUNT, min(Config.MAX_COLOR_COUNT, raw_value))
+    return clamp_color_count(raw_value, Config.MIN_COLOR_COUNT, Config.MAX_COLOR_COUNT)
 
 
 def _validate_uploaded_image(file_storage):
-    file_storage.stream.seek(0)
     try:
-        with Image.open(file_storage.stream) as image:
-            image.verify()
-    except (UnidentifiedImageError, OSError):
-        return None, _api_error(_("Файл не является корректным изображением"), 400)
-    finally:
-        file_storage.stream.seek(0)
-
-    try:
-        with Image.open(file_storage.stream) as image:
-            image_format = (image.format or "").lower()
-            width, height = image.size
-    except (UnidentifiedImageError, OSError):
-        return None, _api_error(_("Файл не является корректным изображением"), 400)
-    finally:
-        file_storage.stream.seek(0)
-
-    if image_format not in Config.ALLOWED_IMAGE_FORMATS:
-        return None, _api_error(_("Недопустимый формат изображения"), 400)
-
-    if width * height > Config.MAX_IMAGE_PIXELS:
-        return None, _api_error(_("Изображение слишком большое по разрешению"), 400)
-
-    format_to_extension = {"jpeg": "jpg", "png": "png", "webp": "webp"}
-    return format_to_extension[image_format], None
+        return (
+            validate_uploaded_image(
+                file_storage,
+                allowed_formats=Config.ALLOWED_IMAGE_FORMATS,
+                max_pixels=Config.MAX_IMAGE_PIXELS,
+            ),
+            None,
+        )
+    except PaletteValidationError as exc:
+        return None, _api_error(_(exc.message), exc.status)
 
 
 def _normalize_palette_colors(colors):
-    if not isinstance(colors, list):
-        return None
-
-    if not (Config.MIN_COLOR_COUNT <= len(colors) <= Config.MAX_COLOR_COUNT):
-        return None
-
-    hex_pattern = re.compile(r"^#[0-9a-fA-F]{6}$")
-    normalized = []
-    for raw_color in colors:
-        if not isinstance(raw_color, str):
-            return None
-        color = raw_color.strip()
-        if not hex_pattern.match(color):
-            return None
-        normalized.append(color.upper())
-
-    return normalized
+    return normalize_palette_colors(colors, Config.MIN_COLOR_COUNT, Config.MAX_COLOR_COUNT)
 
 
 def register_routes(app):
@@ -167,23 +137,11 @@ def register_routes(app):
                 return _api_error(_("Слишком много запросов. Попробуйте позже."), 429)
 
             data = request.get_json(force=True)
-            palette_name = data.get("name", "").strip()
+            requested_name = data.get("name")
             colors = _normalize_palette_colors(data.get("colors", []))
 
             if not colors:
                 return _api_error(_("Палитра должна содержать корректные HEX-цвета"), 400)
-
-            original_name = data.get("name")
-            if original_name is not None and original_name.strip() == "":
-                return (
-                    jsonify(
-                        {
-                            "success": False,
-                            "error": _("Название палитры не может быть пустым или состоять только из пробелов"),
-                        }
-                    ),
-                    400,
-                )
 
             default_base_name = _("Моя палитра")
             default_names = {
@@ -194,35 +152,22 @@ def register_routes(app):
                 "",
             }
 
-            if not palette_name or palette_name in default_names:
-                base_name = default_base_name
-
-                existing = Palette.query.filter_by(
+            try:
+                palette_name = resolve_palette_name(
                     user_id=current_user.id,
-                    name=base_name,
-                ).first()
+                    requested_name=requested_name,
+                    default_base_name=default_base_name,
+                    default_names=default_names,
+                )
+            except PaletteValidationError as exc:
+                return _api_error(_(exc.message), exc.status)
 
-                if not existing:
-                    palette_name = base_name
-                else:
-                    counter = 1
-                    while True:
-                        candidate_name = f"{base_name} {counter}"
-                        existing = Palette.query.filter_by(
-                            user_id=current_user.id,
-                            name=candidate_name,
-                        ).first()
-                        if not existing:
-                            palette_name = candidate_name
-                            break
-                        counter += 1
-            else:
-                existing_palette = Palette.query.filter_by(
-                    user_id=current_user.id,
-                    name=palette_name,
-                ).first()
-                if existing_palette:
-                    return _api_error(_("У вас уже есть палитра с таким названием"), 400)
+            existing_palette = Palette.query.filter_by(
+                user_id=current_user.id,
+                name=palette_name,
+            ).first()
+            if existing_palette:
+                return _api_error(_("У вас уже есть палитра с таким названием"), 400)
 
             new_palette = Palette(
                 name=palette_name,
@@ -230,7 +175,11 @@ def register_routes(app):
                 user_id=current_user.id,
             )
             db.session.add(new_palette)
-            db.session.commit()
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                return _api_error(_("У вас уже есть палитра с таким названием"), 400)
 
             return jsonify({"success": True, "palette_id": new_palette.id})
 
@@ -281,7 +230,11 @@ def register_routes(app):
                 return _api_error(_("У вас уже есть палитра с таким названием"), 400)
 
             palette.name = new_name
-            db.session.commit()
+            try:
+                db.session.commit()
+            except IntegrityError:
+                db.session.rollback()
+                return _api_error(_("У вас уже есть палитра с таким названием"), 400)
 
             return jsonify({"success": True})
 

@@ -7,4 +7,8 @@ Flask-SQLAlchemy==3.1.1
 Flask-Login==0.6.3
 Werkzeug==3.1.5
 Flask-CORS==6.0.2
+Flask-Migrate==4.0.7
+PyJWT==2.10.1
+psycopg[binary]==3.2.6
 gunicorn==23.0.0
+pytest==8.3.5

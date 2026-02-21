@@ -3,9 +3,13 @@
 Модуль: models/user_contact.py – контакты пользователя для восстановления пароля.
 """
 
-from datetime import datetime
+from datetime import datetime, timezone
 
 from extensions import db
+
+
+def _utcnow():
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 class UserContact(db.Model):
@@ -13,11 +17,11 @@ class UserContact(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False, unique=True)
     email = db.Column(db.String(120), unique=True, nullable=True, index=True)
     phone = db.Column(db.String(20), unique=True, nullable=True, index=True)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    created_at = db.Column(db.DateTime, default=_utcnow, nullable=False)
     updated_at = db.Column(
         db.DateTime,
-        default=datetime.utcnow,
-        onupdate=datetime.utcnow,
+        default=_utcnow,
+        onupdate=_utcnow,
         nullable=False,
     )
 

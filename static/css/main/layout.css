@@ -1,4 +1,4 @@
-/* ===== LAYOUT ===== */
+/* ===== СТРУКТУРА СТРАНИЦЫ ===== */
 .page {
     display: flex;
     flex-direction: column;
@@ -20,4 +20,3 @@
     margin-right: auto;
     margin-left: auto;
 }
-

@@ -1,4 +1,4 @@
-/* ===== FOOTER ===== */
+/* ===== ПОДВАЛ ===== */
 footer {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
@@ -44,4 +44,3 @@ footer {
 .footer__social a:hover i {
     color: white;
 }
-

@@ -1,20 +1,20 @@
-/* ===== RESPONSIVE DESIGN ===== */
+/* ===== АДАПТИВНЫЙ ДИЗАЙН ===== */
 
-/* Medium devices (tablets, 768px and up) */
+/* Средние устройства (планшеты, от 768 пикселей) */
 @media (min-width: 768px) {
     .palette-container {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
-/* Large devices (desktops, 992px and up) */
+/* Крупные устройства (настольные компьютеры, от 992 пикселей) */
 @media (min-width: 992px) {
     .palette-container {
         grid-template-columns: repeat(4, 1fr);
     }
 }
 
-/* Small devices (landscape phones, 768px and down) */
+/* Небольшие устройства (телефоны в альбомной ориентации, до 768 пикселей) */
 @media (max-width: 768px) {
     header {
         padding: 0.5rem !important;
@@ -92,7 +92,7 @@
     }
 }
 
-/* Extra small devices (portrait phones, less than 576px) */
+/* Очень маленькие устройства (телефоны в портретной ориентации, до 576 пикселей) */
 @media (max-width: 575px) {
     h1 {
         font-size: 1.6rem;

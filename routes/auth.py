@@ -31,8 +31,8 @@ def load_user(user_id):
 
 
 def _validate_password_strength(password: str, username: str | None = None) -> str | None:
-    if not (10 <= len(password) <= 128):
-        return "Пароль должен содержать от 10 до 128 символов."
+    if not (10 <= len(password) <= 16):
+        return "Пароль должен содержать от 10 до 16 символов."
     if any(ch.isspace() for ch in password):
         return "Пароль не должен содержать пробелы."
     if not any(ch.isupper() for ch in password):

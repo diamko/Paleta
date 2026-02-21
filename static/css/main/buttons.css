@@ -1,5 +1,5 @@
-/* ===== BUTTONS ===== */
-/* Base button styles */
+/* ===== КНОПКИ ===== */
+/* Базовые стили кнопок */
 .btn {
     font-family: var(--font-heading);
     font-weight: 600;
@@ -30,7 +30,7 @@
     height: 300px;
 }
 
-/* Primary Button */
+/* Основная кнопка */
 .btn-primary {
     background: var(--gradient-primary);
 }
@@ -40,7 +40,7 @@
     box-shadow: var(--shadow-hover);
 }
 
-/* Outline Primary */
+/* Контурная основная кнопка */
 .btn-outline-primary {
     border: 2px solid var(--primary-color);
     color: var(--primary-color);
@@ -55,7 +55,7 @@
     box-shadow: var(--shadow-hover);
 }
 
-/* Success Button (Сохранить) */
+/* Кнопка успешного действия (Сохранить) */
 .btn-success {
     background: var(--gradient-success);
 }
@@ -65,7 +65,7 @@
     box-shadow: var(--shadow-hover);
 }
 
-/* Danger Button (Удалить) */
+/* Кнопка опасного действия (Удалить) */
 .btn-danger {
     background: var(--gradient-danger);
 }
@@ -89,10 +89,9 @@
     box-shadow: var(--shadow-hover);
 }
 
-/* Button sizes */
+/* Размеры кнопок */
 .btn-sm {
     padding: 0.25rem 1rem !important;
     font-size: 0.9rem;
     font-weight: 500;
 }
-

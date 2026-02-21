@@ -76,7 +76,7 @@ window.addEventListener('load', function () {
     }, 100);
 });
 
-// Добавление класса active для пункта меню текущей страницы
+// Добавление класса активного пункта меню для текущей страницы
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof bootstrap === 'undefined') {
         console.error('Bootstrap не загружен!');
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Очистка сохранённой палитры в localStorage при выходе из аккаунта
+    // Очистка сохраненной палитры в хранилище браузера при выходе из аккаунта
     const logoutForm = document.getElementById('logoutForm');
     if (logoutForm) {
         logoutForm.addEventListener('submit', () => {
@@ -110,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// Универсальная функция для показа небольших уведомлений (toast)
+// Универсальная функция для показа небольших всплывающих уведомлений
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
     toast.className = `position-fixed bottom-0 end-0 m-3 p-3 ${type === 'error' ? 'bg-danger' : 'bg-success'} text-white rounded shadow`;

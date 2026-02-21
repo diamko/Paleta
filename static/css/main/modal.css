@@ -1,4 +1,4 @@
-/* ===== MODAL STYLES ===== */
+/* ===== СТИЛИ МОДАЛЬНОГО ОКНА ===== */
 .modal-content {
     border: none;
     border-radius: 15px;
@@ -18,4 +18,3 @@
 .modal-footer {
     border-top: 2px solid var(--light-gray);
 }
-

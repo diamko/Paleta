@@ -3,7 +3,7 @@
 Модуль: utils/export_handler.py – формирование данных для экспорта палитр.
 
 Назначение модуля:
-- Подготовка содержимого палитры в различных форматах (JSON, GPL, ASE, CSV, ACO).
+- Подготовка содержимого палитры в форматах JSON, GPL, ASE, CSV и ACO.
 - Возврат бинарных данных, имени файла и режима записи для последующей отправки пользователю.
 """
 
@@ -104,4 +104,3 @@ def export_palette_data(colors: List[str], format_type: str = "json") -> Tuple[O
         return content.encode("utf-8"), filename, "wb"
 
     return content, filename, mode
-

@@ -1,4 +1,4 @@
-/* ===== ANIMATIONS & UTILITIES ===== */
+/* ===== АНИМАЦИИ И УТИЛИТЫ ===== */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -25,7 +25,7 @@
     }
 }
 
-/* Utility Classes */
+/* Вспомогательные классы */
 .gradient-text {
     background: var(--gradient-primary);
     -webkit-background-clip: text;
@@ -50,7 +50,7 @@
     animation: pulse 1.5s infinite;
 }
 
-/* Loading States */
+/* Состояния загрузки */
 .loading {
     position: relative;
     pointer-events: none;
@@ -71,7 +71,7 @@
     animation: spin 0.8s linear infinite;
 }
 
-/* Toast Notifications */
+/* Всплывающие уведомления */
 .toast-notification {
     font-family: var(--font-main);
     font-size: 0.9rem;
@@ -82,7 +82,7 @@
     z-index: 9999;
 }
 
-/* Scrollbar Styling */
+/* Оформление полосы прокрутки */
 ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
@@ -101,4 +101,3 @@
 ::-webkit-scrollbar-thumb:hover {
     background: var(--secondary-color);
 }
-

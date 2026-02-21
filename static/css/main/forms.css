@@ -1,4 +1,4 @@
-/* ===== FORM ELEMENTS ===== */
+/* ===== ЭЛЕМЕНТЫ ФОРМЫ ===== */
 .form-control, .form-select {
     font-family: var(--font-main);
     font-size: 1rem;
@@ -22,4 +22,3 @@
     margin-bottom: 0.2rem;
     color: var(--text-color);
 }
-

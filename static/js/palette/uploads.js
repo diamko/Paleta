@@ -14,7 +14,7 @@ export function createUploadController({ elements, state, paletteView, markerCon
         }
 
         if (file.size > 16 * 1024 * 1024) {
-            alert('Файл слишком большой. Максимальный размер: 16MB');
+            alert('Файл слишком большой. Максимальный размер: 16 МБ');
             return;
         }
 

@@ -1,4 +1,4 @@
-/* ===== PALETTE STYLES ===== */
+/* ===== СТИЛИ ПАЛИТРЫ ===== */
 #colorPalette {
     align-items: flex-start;
 }
@@ -322,7 +322,7 @@
     transform: scale(1.1);
 }
 
-/* Palette Container */
+/* Контейнер палитры */
 .palette-container {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

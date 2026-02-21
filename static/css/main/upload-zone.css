@@ -1,4 +1,4 @@
-/* ===== UPLOAD ZONE ===== */
+/* ===== ОБЛАСТЬ ЗАГРУЗКИ ===== */
 .upload-zone {
     border: 2px dashed #ddd;
     border-radius: 10px;
@@ -14,4 +14,3 @@
     border-color: #6a11cb;
     background: rgba(106, 17, 203, 0.1);
 }
-

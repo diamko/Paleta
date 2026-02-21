@@ -59,6 +59,13 @@
         white-space: nowrap;
     }
 
+    .col-md-3.text-end.d-flex .btn-group.btn-group-sm > .btn,
+    .col-md-3.text-end.d-flex > form #logoutBtn {
+        padding: 0.28rem 0.56rem !important;
+        font-size: 0.76rem;
+        line-height: 1.1;
+    }
+
     .content .container {
         padding-left: 16px;
         padding-right: 16px;
@@ -118,6 +125,13 @@
         width: auto;
     }
 
+    .export-actions .btn,
+    #savePaletteBtn.btn {
+        padding: 0.3rem 0.62rem !important;
+        font-size: 0.78rem;
+        line-height: 1.15;
+    }
+
     .palette-card .btn-group {
         width: auto;
         flex-direction: row;
@@ -174,6 +188,13 @@
     .col-md-3.text-end.d-flex .btn-group .btn {
         width: auto;
     }
+
+    .col-md-3.text-end.d-flex .btn-group.btn-group-sm > .btn,
+    .col-md-3.text-end.d-flex > form #logoutBtn {
+        padding: 0.24rem 0.46rem !important;
+        font-size: 0.72rem;
+        line-height: 1.05;
+    }
     
     .color-swatch {
         width: 60px;
@@ -227,6 +248,13 @@
     .export-actions .btn {
         flex-basis: calc(50% - 0.5rem);
         min-width: 120px;
+    }
+
+    .export-actions .btn,
+    #savePaletteBtn.btn {
+        padding: 0.24rem 0.5rem !important;
+        font-size: 0.72rem;
+        line-height: 1.1;
     }
 
     .palette-card .btn-group .btn {

@@ -62,7 +62,7 @@ To provide a practical, browser-based tool for turning visual references into re
 - Building modular Flask architecture with separated routes and utilities.
 - Integrating image processing and color clustering (Pillow + NumPy + scikit-learn KMeans).
 - Implementing authentication and per-user data management with Flask-Login + SQLAlchemy.
-- Supporting multi-format export workflows (JSON, GPL, ASE, CSV, ACO).
+- Supporting multi-format export workflows (JSON, GPL, ASE, CSV, PNG, ACO).
 
 ### What Makes It Different
 
@@ -77,7 +77,7 @@ To provide a practical, browser-based tool for turning visual references into re
 - Dominant color extraction from image using KMeans.
 - Random palette generation.
 - Palette editing (HEX + picker), re-analysis with a custom number of colors.
-- Export formats: `JSON`, `GPL`, `ASE`, `CSV`, `ACO`.
+- Export formats: `JSON`, `GPL`, `ASE`, `CSV`, `PNG`, `ACO`.
 - User authentication (register/login/logout).
 - Personal palette library with search, filters, and sorting.
 - Recent image uploads (last 7 days) for signed-in users.
@@ -214,6 +214,7 @@ Main config is in `config.py`.
 - `CORS_ENABLED` (`false` by default; enable only if API is called from another origin)
 - `CORS_ORIGINS` (comma-separated list of allowed origins when `CORS_ENABLED=true`)
 - `MAX_IMAGE_PIXELS` (max image resolution in pixels; default `20000000`)
+- `MIN_COLOR_COUNT`, `MAX_COLOR_COUNT` (palette size bounds for generation and validation; defaults `3` and `15`)
 - `PASSWORD_RESET_CODE_TTL_MINUTES` (reset code lifetime in minutes; default `15`)
 - `PASSWORD_RESET_MAX_ATTEMPTS` (max code attempts before forcing re-request; default `5`)
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD`, `SMTP_FROM` (email delivery for password reset)
@@ -241,6 +242,7 @@ export PASSWORD_RESET_MAX_ATTEMPTS="5"
 - `UPLOAD_FOLDER = static/uploads`
 - `MAX_CONTENT_LENGTH = 16 MB`
 - Allowed image extensions: `png`, `jpg`, `jpeg`, `webp`
+- Color count bounds: `MIN_COLOR_COUNT = 3`, `MAX_COLOR_COUNT = 15`
 
 If needed, pass a different DB URL via `DATABASE_URL`.
 
@@ -278,7 +280,7 @@ You also get:
 
 Registration password requirements:
 
-- length 10 to 128 characters,
+- length 10 to 16 characters,
 - at least one uppercase letter,
 - at least one lowercase letter,
 - at least one digit,
@@ -294,7 +296,7 @@ Registration password requirements:
 | `POST`   | `/api/palettes/save`                | Save palette (login required)                       |
 | `POST`   | `/api/palettes/rename/<palette_id>` | Rename palette (login required)                     |
 | `DELETE` | `/api/palettes/delete/<palette_id>` | Delete palette (login required)                     |
-| `POST`   | `/api/export?format=<type>`         | Export palette (`json`, `gpl`, `ase`, `csv`, `aco`) |
+| `POST`   | `/api/export?format=<type>`         | Export palette (`json`, `gpl`, `ase`, `csv`, `png`, `aco`) |
 | `GET`    | `/static/uploads/<filename>`        | Serve uploaded image                                |
 
 ## Project Structure
@@ -309,7 +311,6 @@ Paleta/
 ├─ utils/
 ├─ templates/
 ├─ static/
-├─ LICENSE
 ├─ LICENCE
 ├─ requirements.txt
 ├─ README.md
@@ -318,7 +319,7 @@ Paleta/
 
 ## Testing
 
-Automated tests are not added yet.
+Automated tests are currently not committed in this repository.
 
 Manual smoke test checklist:
 
@@ -334,8 +335,7 @@ Manual smoke test checklist:
 - Add automated test suite (`pytest`).
 - Add migration support (`Flask-Migrate` / Alembic).
 - Add production-ready config profiles.
-- Implement PNG export.
-- Add i18n (currently UI texts are mostly Russian).
+- Improve i18n QA and complete remaining translation gaps.
 
 ## Contributing
 

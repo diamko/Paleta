@@ -31,6 +31,7 @@ import models  # noqa: F401 - регистрирует модели для db.cr
 from routes.pages import register_routes as register_page_routes
 from routes.auth import register_routes as register_auth_routes
 from routes.api import register_routes as register_api_routes
+from routes.mobile_api import register_routes as register_mobile_api_routes
 from utils.cleanup import cleanup_old_uploads
 from flask_babel import gettext as _
 from utils.i18n import is_supported_language, resolve_request_language
@@ -71,6 +72,7 @@ def create_app() -> Flask:
     register_page_routes(app)
     register_auth_routes(app)
     register_api_routes(app)
+    register_mobile_api_routes(app)
 
     with app.app_context():
         # Создаем отсутствующие таблицы (без изменения существующих колонок)
@@ -262,6 +264,9 @@ def create_app() -> Flask:
             return None
 
         if request.endpoint in {"healthz"}:
+            return None
+
+        if request.path.startswith("/api/mobile/v1/"):
             return None
 
         if _is_csrf_valid():

@@ -8,12 +8,13 @@
 - Домен с `A`-записями на IP сервера (`@` и `www`)
 - Docker + Docker Compose plugin
 - Nginx + Certbot
+- `libnginx-mod-http-geoip2` + база GeoLite2 Country (для шаблона `deploy/nginx/paleta.conf`)
 
 ## 2. Подготовка сервера
 
 ```bash
 sudo apt-get update
-sudo apt-get install -y ca-certificates curl gnupg nginx certbot python3-certbot-nginx
+sudo apt-get install -y ca-certificates curl gnupg nginx certbot python3-certbot-nginx libnginx-mod-http-geoip2
 ```
 
 Установите Docker (официальным способом) и проверьте:
@@ -178,6 +179,10 @@ sudo nano /etc/nginx/sites-available/paleta
 ```
 
 В файле замените `example.com` и `www.example.com` на ваш домен.
+
+Важно по GeoIP2:
+- Шаблон `deploy/nginx/paleta.conf` использует директиву `geoip2` и файл `/etc/nginx/GeoLite2-Country.mmdb`.
+- Если модуль/база не установлены, закомментируйте блок `geoip2 ...` и строку `proxy_set_header X-Country-Code $geoip2_country_code;`, затем проверьте `sudo nginx -t`.
 
 Активируйте конфиг:
 

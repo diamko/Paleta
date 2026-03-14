@@ -1197,3 +1197,59 @@ msgstr "Update Password"
 msgid "Запросить новый код"
 msgstr "Request a new code"
 
+#: templates/base.html templates/download.html
+msgid "Приложение"
+msgstr "App"
+
+#: templates/download.html
+msgid "Скачать приложение Paleta"
+msgstr "Download Paleta App"
+
+#: templates/download.html
+msgid "Мобильное приложение Paleta"
+msgstr "Paleta Mobile App"
+
+#: templates/download.html
+msgid "Создавайте и управляйте цветовыми палитрами прямо на смартфоне"
+msgstr "Create and manage color palettes right on your smartphone"
+
+#: templates/download.html
+msgid "Paleta для Android"
+msgstr "Paleta for Android"
+
+#: templates/download.html
+msgid "Версия"
+msgstr "Version"
+
+#: templates/download.html
+msgid "Требуется Android 8.0 и выше"
+msgstr "Requires Android 8.0 or higher"
+
+#: templates/download.html
+msgid "Скачать APK"
+msgstr "Download APK"
+
+#: templates/download.html
+msgid "Извлечение палитр"
+msgstr "Palette Extraction"
+
+#: templates/download.html
+msgid "Загрузите фото и получите гармоничную палитру цветов"
+msgstr "Upload a photo and get a harmonious color palette"
+
+#: templates/download.html
+msgid "Редактор цветов"
+msgstr "Color Editor"
+
+#: templates/download.html
+msgid "Настраивайте оттенки с помощью цветового колеса и гармоний"
+msgstr "Fine-tune shades using the color wheel and harmonies"
+
+#: templates/download.html
+msgid "Экспортируйте палитры в форматах JSON, PNG, GPL, ASE, CSV"
+msgstr "Export palettes in JSON, PNG, GPL, ASE, CSV formats"
+
+#: templates/download.html
+msgid "Для установки APK разрешите установку из неизвестных источников в настройках вашего устройства."
+msgstr "To install the APK, allow installation from unknown sources in your device settings."
+

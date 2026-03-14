@@ -99,6 +99,20 @@ def register_routes(app):
         """Выполняет операцию `faq` в рамках сценария модуля."""
         return render_template("faq.html")
 
+    @app.route("/<lang>/download")
+    def download_app(lang):
+        """Страница скачивания мобильного приложения."""
+        return render_template("download.html")
+
+    @app.get("/download/paleta.apk")
+    def download_apk():
+        """Отдаёт APK-файл мобильного приложения."""
+        return send_from_directory(
+            app.static_folder, "apk/paleta.apk",
+            as_attachment=True,
+            download_name="Paleta.apk",
+        )
+
     @app.route(f"/{yandex_verification_file}")
     def yandex_verification():
         """Выполняет операцию `yandex_verification` в рамках сценария модуля."""
@@ -111,6 +125,7 @@ def register_routes(app):
             "index",
             "generatePalet",
             "faq",
+            "download_app",
         )
         supported_languages = app.config["SUPPORTED_LANGUAGES"]
         default_language = app.config["DEFAULT_LANGUAGE"]
